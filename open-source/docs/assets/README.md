@@ -9,3 +9,7 @@ Old screenshots containing real accounts, machine paths or conversations have be
 
 - `system-architecture-v2-zh.png`: Chinese translation of the English system architecture.
 - `organization-network-zh.png` / `organization-network-en.png`: matched conceptual maps of employee computers, the organization Server, people/AI rooms, customer support, apps/feedback, and mobile use. Generated illustrations contain no real accounts or product screenshots.
+
+- `organization-network-colleagues-zh.png` / `organization-network-colleagues-en.png`: current organization network, using colleague terminology. Earlier network images are retained as historical assets, not linked from the current README or website.
+
+- `organization-network-colleagues-zh.png` / `organization-network-colleagues-en.png`: current colleague-terminology revision; used by the website and README alongside the Personal Entity positioning. Prior network images remain historical assets.

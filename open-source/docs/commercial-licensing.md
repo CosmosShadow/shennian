@@ -14,9 +14,9 @@ Internal use by one organization with up to 20 enabled human accounts, retaining
 
 ## 人数口径 / Account counting
 
-不是公司全部员工数；Agent、机器人和停用账号不计。同一自然人多个设备不重复计数，同一组织多个部署合并计算，不通过拆分实例规避免费上限。
+不是公司全部同事数；Agent、机器人和停用账号不计。同一自然人多个设备不重复计数，同一组织多个部署合并计算，不通过拆分实例规避免费上限。
 
-Count enabled human users of this system, not all company employees. Exclude agents, bots, and disabled accounts. Deduplicate devices for the same person and aggregate deployments of the same organization; splitting instances does not multiply the allowance.
+Count enabled human users of this system, not all company colleagues. Exclude agents, bots, and disabled accounts. Deduplicate devices for the same person and aggregate deployments of the same organization; splitting instances does not multiply the allowance.
 
 ## 企业内部商业授权 / Commercial authorization for internal use
 

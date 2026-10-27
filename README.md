@@ -1,12 +1,12 @@
 # 神念 · Shennian
 
-**连接你的 AI，也连接别人和他们的 AI。**
+**打造个人的 Personal Entity，构建企业的 AI 原生组织。**
 
 [English](README.en.md) · [官网](https://shennian.net/) · [客户端 / Skill 安装](https://shennian.net/install.md) · [全部使用文档](https://shennian.net/docs) · [全部功能](open-source/docs/features.md)
 
 > 私有准备仓库，暂未开放。后续是否公开由维护者另行决定。
 
-神念将电脑上的 AI 工具与人、智能体和本地应用连接起来。通过手机 App 或已有的原生 AI 工具安排工作、参与群聊，并按权限分享智能体与应用。可以使用神念官方云，也可以部署独立的自托管 服务端。
+神念帮助个人把自己的 AI、知识、应用和任务组织成 Personal Entity，也帮助企业连接同事和他们的 AI，构建 AI 原生组织。通过手机 App 或已有的原生 AI 工具安排工作、参与群聊，并按权限分享智能体与应用。可以使用神念官方云，也可以部署独立的自托管 服务端。
 
 ## 系统架构
 
@@ -48,9 +48,9 @@
 
 ## 人与 AI 如何共同工作
 
-![神念 AI 原生组织协作网络](open-source/docs/assets/organization-network-zh.png)
+![神念 AI 原生组织协作网络](open-source/docs/assets/organization-network-colleagues-zh.png)
 
-员工在自己的电脑接入 AI，由同一组织的服务器管理账号、群聊与权限。人和有职责的智能体共同讨论、分工与反馈；按权限向客户提供客服智能体，或分享本地表单和业务工具。图为协作方式示意，功能状态以上表与验收矩阵为准。
+同事在自己的电脑接入 AI，由同一组织的服务器管理账号、群聊与权限。人和有职责的智能体共同讨论、分工与反馈；按权限向客户提供客服智能体，或分享本地表单和业务工具。图为协作方式示意，功能状态以上表与验收矩阵为准。
 
 ## 使用神念官方云
 

@@ -1,12 +1,12 @@
 # Shennian
 
-**Connect your AI. Collaborate with people and their AI.**
+**Build your Personal Entity and your company’s AI-native organization.**
 
 [简体中文](README.md) · [Website](https://shennian.net/en/) · [Install Client & Skill](https://shennian.net/install.md) · [All user guides](https://shennian.net/en/docs) · [All features](open-source/docs/features.md)
 
 > Private preparation repository. The repository is not publicly accessible yet; publication requires a separate maintainer decision.
 
-Shennian connects the AI tools on your computer with people, agents, and local applications. Use the mobile App or an existing AI tool to direct work, collaborate in rooms, and share selected agents or applications. Choose Shennian Cloud or an independent self-hosted Server.
+Shennian helps individuals organize their AI, knowledge, apps, and tasks into a Personal Entity, and helps companies connect colleagues and their AI into an AI-native organization. Use the mobile App or an existing AI tool to direct work, collaborate in rooms, and share selected agents or applications. Choose Shennian Cloud or an independent self-hosted Server.
 
 ## System architecture
 
@@ -48,9 +48,9 @@ Availability depends on the platform, installed version, and deployment configur
 
 ## People and AI working together
 
-![Shennian AI-native organization network](open-source/docs/assets/organization-network-en.png)
+![Shennian AI-native organization network](open-source/docs/assets/organization-network-colleagues-en.png)
 
-Employees connect their AI from their own computers. The selected organization Server manages accounts, rooms, and permissions. People and role-based agents discuss work, assign tasks, and review results; customers can use explicitly shared support agents, forms, and business tools. This is a conceptual collaboration map; feature status and acceptance scope are listed above.
+Colleagues connect their AI from their own computers. The selected organization Server manages accounts, rooms, and permissions. People and role-based agents discuss work, assign tasks, and review results; customers can use explicitly shared support agents, forms, and business tools. This is a conceptual collaboration map; feature status and acceptance scope are listed above.
 
 ## Get started with Shennian Cloud
 
