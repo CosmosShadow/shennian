@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1160" viewBox="0 0 1600 1160"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#7c93b2" stroke-width="1.5"/></marker></defs><rect width="1600" height="1160" fill="#f4f7fb"/><style>text{font-family:system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;fill:#233653}.title{font-size:38px;font-weight:700}.sub{font-size:20px;fill:#5a6f8e}.head{font-size:25px;font-weight:650}.line{font-size:21px}.small{font-size:18px;fill:#5a6f8e}</style>
+<text x="56" y="66" class="title">神念 · 开源功能与系统架构</text>
+<text x="56" y="104" class="sub">连接人、自己的 AI 与别人的 AI ｜ 一个安装，一台活动 Server</text>
+<rect x="56" y="142" width="1488" height="112" rx="18" fill="white" stroke="#d7e0ec"/><rect x="56" y="162" width="5" height="32" rx="2" fill="#536ce8"/>
+<text x="80" y="187" class="head">入口</text>
+<text x="80" y="228" class="line">手机 App（iOS / Android）       ·       原生 AI 工具（CLI / Skill）       ·       单实例身份与隔离缓存</text>
+<path d="M290,254 L290,289" stroke="#7c93b2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<path d="M800,254 L800,289" stroke="#7c93b2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<path d="M1310,254 L1310,289" stroke="#7c93b2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<rect x="56" y="292" width="468" height="326" rx="18" fill="white" stroke="#d7e0ec"/><rect x="56" y="312" width="5" height="32" rx="2" fill="#536ce8"/>
+<text x="80" y="337" class="head">协作网络</text>
+<text x="80" y="378" class="line">账号 / 注册策略 / 设备配对</text>
+<text x="80" y="412" class="line">群聊 / 成员 / 邀请 / 消息 / 附件</text>
+<text x="80" y="446" class="line">独立智能体身份 / 会话与历史</text>
+<text x="80" y="480" class="line">联系人 / Agent 链接 / 可见性</text>
+<text x="80" y="514" class="line">成员权限 / 撤权 / 同步恢复</text>
+<rect x="566" y="292" width="468" height="326" rx="18" fill="white" stroke="#d7e0ec"/><rect x="566" y="312" width="5" height="32" rx="2" fill="#0b9983"/>
+<text x="590" y="337" class="head">Personal Agent</text>
+<text x="590" y="378" class="line">主电脑选择 / 主 Agent 系统设置</text>
+<text x="590" y="412" class="line">自己的模型 Key / 默认 Worker</text>
+<text x="590" y="446" class="line">后台任务 / 事件 / 执行结果</text>
+<text x="590" y="480" class="line">Wiki 与记忆 · 有限索引与授权读取</text>
+<text x="590" y="514" class="line">日记 · 主电脑文件与手机副本</text>
+<rect x="1076" y="292" width="468" height="326" rx="18" fill="white" stroke="#d7e0ec"/><rect x="1076" y="312" width="5" height="32" rx="2" fill="#b8781b"/>
+<text x="1100" y="337" class="head">个人功能与工具</text>
+<text x="1100" y="378" class="line">提醒 / 日历 / 笔记</text>
+<text x="1100" y="412" class="line">录音 / 聆听 / 可选语音转写</text>
+<text x="1100" y="446" class="line">本机文件夹 / 已登记应用</text>
+<text x="1100" y="480" class="line">原生 AI 会话 / 能力发现</text>
+<text x="1100" y="514" class="line">高影响动作仍需真人授权</text>
+<path d="M290,618 L290,663" stroke="#7c93b2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<path d="M800,618 L800,663" stroke="#7c93b2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<path d="M1310,618 L1310,663" stroke="#7c93b2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<rect x="56" y="666" width="724" height="236" rx="18" fill="white" stroke="#d7e0ec"/><rect x="56" y="686" width="5" height="32" rx="2" fill="#536ce8"/>
+<text x="80" y="711" class="head">自托管 Server · Docker Compose</text>
+<text x="80" y="752" class="line">受信 HTTPS / WSS → API / 实时 Relay</text>
+<text x="80" y="786" class="line">后台 Worker · 通知与处理协调</text>
+<text x="80" y="820" class="line">数据库：账号 / 关系 / 消息 / 元数据</text>
+<text x="80" y="854" class="line">Redis：中转与任务　附件：本地或对象存储</text>
+<rect x="820" y="666" width="724" height="236" rx="18" fill="white" stroke="#d7e0ec"/><rect x="820" y="686" width="5" height="32" rx="2" fill="#0b9983"/>
+<text x="844" y="711" class="head">用户电脑 · Client / Daemon</text>
+<text x="844" y="752" class="line">配对 / 权限 / 工具适配 / Personal Agent 执行</text>
+<text x="844" y="786" class="line">本地：记忆 / 日记 / 历史 / 工作空间 / 应用</text>
+<text x="844" y="820" class="line">受限：设备身份与模型 Key，不回传手机明文</text>
+<text x="844" y="854" class="line">每台 Client 独立备份；不等于操作系统沙箱</text>
+<path d="M780,784 L818,784" stroke="#7c93b2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<rect x="56" y="940" width="1488" height="112" rx="18" fill="white" stroke="#d7e0ec"/><rect x="56" y="960" width="5" height="32" rx="2" fill="#b8781b"/>
+<text x="80" y="985" class="head">可选供应商与部署配置</text>
+<text x="80" y="1026" class="line">模型 / ASR / TTS / 短信 / 系统推送按需启用；未配置不静默回退，客户端只接收能力状态</text>
+<text x="56" y="1092" class="small">框架功能地图 ≠ 全部验收通过；托管 Pi Agent 的实测不替代内置 Personal Agent 验收。</text>
+<text x="56" y="1125" class="small">传输 TLS ≠ 端到端加密。Server 备份不含其他电脑的个人文件。核对：2026-10-24。</text>
+</svg>

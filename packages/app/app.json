@@ -1,0 +1,120 @@
+{
+  "expo": {
+    "name": "Shennian",
+    "locales": {
+      "en": "./locales/en.json",
+      "zh": "./locales/zh.json",
+      "zh-Hans": "./locales/zh.json",
+      "zh-Hant": "./locales/zh.json"
+    },
+    "slug": "shennian",
+    "version": "0.5.1",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "scheme": "shennian",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "icon": "./assets/Shennian.icon",
+      "runtimeVersion": "0.5.0",
+      "splash": {
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "backgroundColor": "#0a0a0a"
+        }
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "UIViewControllerBasedStatusBarAppearance": true,
+        "CFBundleDevelopmentRegion": "en",
+        "CFBundleAllowMixedLocalizations": true,
+        "UIBackgroundModes": ["audio", "remote-notification"]
+      },
+      "bundleIdentifier": "net.shennian.community",
+      "buildNumber": "61"
+    },
+    "android": {
+      "runtimeVersion": "0.5.1",
+      "splash": {
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "backgroundColor": "#0a0a0a"
+        }
+      },
+      "softwareKeyboardLayoutMode": "resize",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundColor": "#00000000"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.VIBRATE",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.WAKE_LOCK",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MICROPHONE"
+      ],
+      "blockedPermissions": [
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.READ_PHONE_STATE",
+        "android.permission.GET_TASKS",
+        "android.permission.QUERY_ALL_PACKAGES"
+      ],
+      "package": "net.shennian.community",
+      "versionCode": 15
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./public/favicon.ico"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "origin": "https://app.shennian.net"
+        }
+      ],
+      "expo-notifications",
+      "./plugins/with-brand-icons",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to scan QR codes for pairing your mobile device with your desktop computer and logging in.",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone for voice input to communicate with AI coding agents.",
+          "recordAudioAndroid": true
+        }
+      ],
+      "expo-document-picker",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos and videos when you choose media to attach to AI Agent conversations.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save images and videos from AI Agent conversations to your photo library.",
+          "granularPermissions": ["photo", "video"]
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access photo and video media you choose for QR scanning, AI Agent attachments, or your profile photo.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to use your camera when you take an AI Agent attachment or profile photo."
+        }
+      ],
+      "expo-sqlite"
+    ],
+    "extra": {
+      "router": {}
+    },
+    "runtimeVersion": "0.5.0"
+  }
+}

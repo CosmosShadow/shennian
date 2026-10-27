@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Shennian",
+    "CFBundleName": "Shennian",
+    "NSLocationWhenInUseUsageDescription": "Record your route, approximate distance and stops only when you enable location recording during voice recording, including in the background and on the lock screen. Locations stay on this phone. You can turn this off anytime.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Record your route, approximate distance and stops only when you enable location recording during voice recording, including in the background and on the lock screen. Locations stay on this phone. You can turn this off anytime."
+  },
+  "android": {
+    "app_name": "Shennian"
+  }
+}

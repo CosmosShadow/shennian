@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "name": "selfhost-v1",
+  "schemaSha256": "ea21bdd2bd7222fb305a34c0706f7c587a81f08ab42ae01e3cde4318d9e43195",
+  "generator": "Prisma 7.5.0 migrate diff --from-empty",
+  "sourceCommit": "7ebb5c8b70eb4ebc3719b268be7208377af1ee6d",
+  "initialSchemaSha256": "e9dbe663f0f167cf727cd8a9bc93dcc609d99a4fc0614e1bb3e18cd7309f5d5e",
+  "latestMigration": "20261026000100_personal_cloud_replica"
+}

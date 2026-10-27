@@ -1,0 +1,12 @@
+{
+  "name": "expo-document-saver",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Save downloaded bytes through the Android system document picker.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo 'Native Expo module; no JS build step'"
+  },
+  "dependencies": {}
+}

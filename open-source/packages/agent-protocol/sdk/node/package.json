@@ -1,0 +1,36 @@
+{
+  "name": "@shennian/agent",
+  "version": "0.1.0",
+  "description": "Node.js/TypeScript SDK for the Shennian Agent Protocol",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "Shennian",
+  "license": "MIT",
+  "keywords": [
+    "shennian",
+    "agent",
+    "protocol",
+    "ai"
+  ],
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^6.0.2"
+  }
+}

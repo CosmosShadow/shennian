@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "product": "shennian",
+  "skill": {
+    "name": "shennian",
+    "version": "0.5.53",
+    "url": "https://shennian.net/skill.md",
+    "sha256": "f5165e41a2ea06375e834b4d56009a337152456863217319132ec845758dd9f3",
+    "minimumClientVersion": "0.5.53",
+    "maximumClientVersion": null
+  },
+  "previousSkills": [
+    {
+      "version": "0.5.52",
+      "sha256": "f5165e41a2ea06375e834b4d56009a337152456863217319132ec845758dd9f3"
+    },
+    {
+      "version": "0.5.51",
+      "sha256": "e3c6bef92f7f61883e80c7a4055c14f2165e1458691cf8b59384791c6f1b2955"
+    },
+    {
+      "version": "0.5.50",
+      "sha256": "2926c917056b8b19ed7152ab0d4c8ce2c74496a7e2bddb55bdb20b16d8492599"
+    },
+    {
+      "version": "0.5.49",
+      "sha256": "ffcda413201dfd62bf4f7c8e0643d36c550f72d434a25404a70f106b048e74a0"
+    },
+    {
+      "version": "0.5.48",
+      "sha256": "d962eb5c570f1ffe7613aeea9ecd53eda03ec0ce13236a23e934f6dd11d33cbb"
+    },
+    {
+      "version": "0.5.47",
+      "sha256": "fd86046d98778e760611a64a652e3099f9ab997150fe344cba05729a0f18fac7"
+    },
+    {
+      "version": "0.5.46",
+      "sha256": "682335ef8cbff8205b89e0aaae6bb3ac41d07a4bb3c29917b6815dd95233592e"
+    },
+    {
+      "version": "0.5.45",
+      "sha256": "5bec4703744266e21109a139afd415320a371e39d1bc18560c074d1c63931d49"
+    },
+    {
+      "version": "0.5.44",
+      "sha256": "e199178b434dcc81c703717f793e3785ead8358b5959d26714117b745da750c4"
+    },
+    {
+      "version": "0.5.39",
+      "sha256": "af5c461f2401423074da0135a04e3f68f30b0ff2507e69e342564c6bac6249e5"
+    },
+    {
+      "version": "0.5.35",
+      "sha256": "3e502ab48fed323beb168b4e44a4da5e09a3e447b2d4c98e800710a2a750b4a1"
+    },
+    {
+      "version": "0.5.35",
+      "sha256": "6fa1b117570da40a74ea97369d46df3855e2dd3ff3ab22f92e16ff592696afb3"
+    },
+    {
+      "version": "0.5.33",
+      "sha256": "601f922dfd3befc0cc866e4efb4ccf3c0f3991e5ee5cd4970e0b5b3e04441198"
+    },
+    {
+      "version": "0.5.33",
+      "sha256": "62e3dddfa9bed0984352eca58a4bdae947aeb55d24be0e75d264df5c5a55a5d0"
+    },
+    {
+      "version": "0.5.33",
+      "sha256": "6ebde9fda1514e2ecd4f882c5778e288045c60650e90393951f88744d8086947"
+    },
+    {
+      "version": "0.5.32",
+      "sha256": "6ebde9fda1514e2ecd4f882c5778e288045c60650e90393951f88744d8086947"
+    },
+    {
+      "version": "0.5.32",
+      "sha256": "5a979e90e418c128f8cc96be83cd67b451e9214c2b5966634ca7600709f6c828"
+    },
+    {
+      "version": "0.5.28",
+      "sha256": "00bb89d2e0920b13c5cea07a0950d74caf730d96c3ef1114a7d69e8c53b80fec"
+    },
+    {
+      "version": "0.5.27",
+      "sha256": "3743ed33131a812530eccebc1022bb8cf49e43a4babb4bccb84e0ad5028eab24"
+    },
+    {
+      "version": "0.5.27",
+      "sha256": "66a66ebdde186e5b69be173388b78f4be692ca2316c311d34a8e1825e7aa877b"
+    },
+    {
+      "version": "0.5.26",
+      "sha256": "14be4a6f374027f78207426ca572a8697e43eca87d6216a169cdd41042c8e60a"
+    },
+    {
+      "version": "0.5.25",
+      "sha256": "1cc73a58f92e5f1db19a3fca36d8acbaee876c0be723249385e9dbfcf09b864d"
+    },
+    {
+      "version": "0.5.24",
+      "sha256": "b2310f87874a876ed0d210a13b37a6ab4ec15738fe4eaa31693e1602c5cc33c7"
+    },
+    {
+      "version": "0.5.23",
+      "sha256": "b7c7805d7fb96036ead29401961ab290f544fcfa05e17ac81daf0c96d9f546d7"
+    },
+    {
+      "version": "0.5.22",
+      "sha256": "47d4d7671da1c57dd2c619ac22ae8a3629b16869ae41c1bb84436e699b3a4e43"
+    },
+    {
+      "version": "0.5.21",
+      "sha256": "5ddd0f99d47e07b7cbc1deaefc80b14508f8e9efed6e7c6cb568e7e0f003579d"
+    },
+    {
+      "version": "0.5.20",
+      "sha256": "1be927b99f8039c335883020c4c31da34a1a86c76e602d513070e69079c37250"
+    },
+    {
+      "version": "0.5.20",
+      "sha256": "1e52e94533aac2c439a48b6fcd7b6531cb79462c6dc80ed71ddc2dd7f073c9ca"
+    },
+    {
+      "version": "0.5.19",
+      "sha256": "f848fda506e4cce4fa0ca65801dbf3967a39b2473aa15bdc0d7f8832d5b296d7"
+    },
+    {
+      "version": "0.5.18",
+      "sha256": "ad2dfb27fbb64a5ee2856015af7c2d6e3767dfcb562bae59ee92f5aa5cafa63d"
+    },
+    {
+      "version": "0.5.17",
+      "sha256": "3434c789a1facc406b01e45d13c61a041ca60a7a7f466e9083fc289646914eb7"
+    },
+    {
+      "version": "0.5.16",
+      "sha256": "6855d04165245ffbb9c85076a698a92128901e314f2f89cd52de7867e4f222a6"
+    },
+    {
+      "version": "0.5.15",
+      "sha256": "a85b973593753f94f2a730d32975b06db6dac0a580f4b63f8d7038c3773a58e4"
+    },
+    {
+      "version": "0.5.14",
+      "sha256": "1cdb591a9b4bbefad9ccac946c23c074dc38ad0dde40a04fe4c1b5fc19249fc0"
+    },
+    {
+      "version": "0.5.13",
+      "sha256": "a727ac04918330f9f31164d97f0c8f04ed5c5b93832c22de086cf48a58aa6e8a"
+    },
+    {
+      "version": "0.5.13",
+      "sha256": "4ddf10c705d887be88da8d5ebfa0a9d668c8e4e9085fb754ca03385c0e1c77a5"
+    },
+    {
+      "version": "0.5.12",
+      "sha256": "2f058b0e35caf918d0d969e5fa95a0ff6791484c8216093029b1a0fa8aa9b627"
+    },
+    {
+      "version": "0.5.12",
+      "sha256": "0663ab6a9003b787b440756e4148b2854bb7dd367db62bd998c9a01c180fb73c"
+    },
+    {
+      "version": "0.5.12",
+      "sha256": "8982958a849b72f43cf5487640cabaa5d2556c30520ba670acfca8e2a1a6211e"
+    },
+    {
+      "version": "0.5.12",
+      "sha256": "87235eff21cc8fe1a7b0fda5bb3e09657e34995a73f1f0797973c86042e0653b"
+    },
+    {
+      "version": "0.5.12",
+      "sha256": "113f116cd6adba778b69cf5d9109a1292a5e2fdbe6f25464e4dc4dd290c62483"
+    },
+    {
+      "version": "0.5.6",
+      "sha256": "81521746c4773672ec44400cf3f771fcd88525e353db0a35f2b2f8071d512822"
+    },
+    {
+      "version": "0.5.7",
+      "sha256": "a0547d81d9254c843bb8253b4c0ef83ee9d84d11d54e5f3f46821d089bc3c346"
+    },
+    {
+      "version": "0.5.7",
+      "sha256": "95fc27e141d290819a2a19a1a0aff8fb805efe96cdb264103ced31fe9154eb2d"
+    },
+    {
+      "version": "0.5.7",
+      "sha256": "7f7c0ae0bf61efd27dbf9305c5d4187aa4c7b352a85e6e7e03c9d32a9f733401"
+    },
+    {
+      "version": "0.5.8",
+      "sha256": "52bc455d274aea131dba343e27650fcf340440981181751092476b7d1af8b250"
+    },
+    {
+      "version": "0.5.8",
+      "sha256": "bad16b4b446b54b4d82c63833c03bb9349231cd51ef7a5cdfa0cedb628381d1a"
+    },
+    {
+      "version": "0.5.8",
+      "sha256": "6f1755b810a6f8d530038bae5b16ae53151d11b2a85484756888817ef6b111e0"
+    },
+    {
+      "version": "0.5.9",
+      "sha256": "5cd1872ac9a11723c073e127cabeb3d41948e098c2f76f3487784548e6a0d639"
+    }
+  ]
+}

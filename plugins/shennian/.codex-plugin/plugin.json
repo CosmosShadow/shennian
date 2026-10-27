@@ -1,0 +1,43 @@
+{
+  "name": "shennian",
+  "version": "0.5.53",
+  "description": "通过 Shennian CLI 使用神念群聊和本机其他 AI 协作。",
+  "author": {
+    "name": "Shennian",
+    "url": "https://shennian.net"
+  },
+  "homepage": "https://shennian.net",
+  "repository": "https://github.com/CosmosShadow/shennian",
+  "license": "MIT",
+  "keywords": [
+    "shennian",
+    "room",
+    "group-chat",
+    "agent",
+    "cli"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Shennian",
+    "shortDescription": "使用神念群聊和多 Agent 协作",
+    "longDescription": "让当前 AI 使用 Shennian CLI 参与明确群聊，并在用户要求时调用本机其他 AI 发起任务、跟进进度和获取结果。",
+    "developerName": "Shennian",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://shennian.net",
+    "defaultPrompt": [
+      "帮我安装并配对神念",
+      "加入这个神念群聊，读取最近消息并按我的要求回复",
+      "在当前项目用多个 Agent 并行完成这个任务"
+    ],
+    "brandColor": "#7C3AED",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png",
+    "logoDark": "./assets/icon-dark.png",
+    "screenshots": []
+  }
+}

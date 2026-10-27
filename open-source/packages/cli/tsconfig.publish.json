@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": false,
+    "declarationMap": false,
+    "tsBuildInfoFile": ".tsbuildinfo.publish"
+  },
+  "exclude": [
+    "src/__tests__/**",
+    "src/__experiments__/**"
+  ]
+}

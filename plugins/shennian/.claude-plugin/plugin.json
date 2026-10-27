@@ -1,0 +1,18 @@
+{
+  "name": "shennian",
+  "version": "0.5.53",
+  "description": "通过 Shennian CLI 使用神念群聊和本机其他 AI 协作。",
+  "author": {
+    "name": "Shennian"
+  },
+  "homepage": "https://shennian.net",
+  "repository": "https://github.com/CosmosShadow/shennian",
+  "license": "MIT",
+  "keywords": [
+    "shennian",
+    "room",
+    "group-chat",
+    "agent",
+    "cli"
+  ]
+}

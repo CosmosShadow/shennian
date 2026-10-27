@@ -1,0 +1,1993 @@
+datasource db {
+  provider = "mysql"
+}
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  importFileExtension = "js"
+}
+
+model InstanceAccount {
+  username String @id @db.VarChar(64)
+  userId String @unique
+  passwordHash String @db.VarChar(256)
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  instanceAccount InstanceAccount?
+  personalModuleRecords PersonalModuleRecord[]
+  id                           String                        @id @default(cuid())
+  phone                        String?                       @unique
+  email                        String?
+  googleSub                    String?                       @unique
+  appleSub                     String?                       @unique
+  name                         String                        @default("")
+  description                  String                        @default("") @db.VarChar(1000)
+  nameSetupRequired            Boolean                       @default(false)
+  avatarVersion                String?                       @db.VarChar(43)
+  avatarOriginalObjectKey      String?                       @db.VarChar(512)
+  avatarSmallObjectKey         String?                       @db.VarChar(512)
+  avatarMediumObjectKey        String?                       @db.VarChar(512)
+  avatarUpdatedAt              DateTime?
+  voiceChiefVoice              String?                       @db.VarChar(64)
+  accountTier                  String                        @default("personal")
+  entitlementFlags             Json?
+  createdAt                    DateTime                      @default(now())
+  machines                     Machine[]
+  grantsGiven                  MachineGrant[]                @relation("Granter")
+  grantsRecv                   MachineGrant[]                @relation("Grantee")
+  organizationsOwned           Organization[]                @relation("OrganizationOwner")
+  organizationMembers          OrganizationMember[]
+  organizationInvitesCreated   OrganizationInvite[]          @relation("OrganizationInviteCreator")
+  devices                      Device[]
+  pushRegistrations            DevicePushRegistration[]
+  sessionStates                SessionUserState[]
+  voiceChiefMemory             VoiceChiefMemory?
+  shennianMessages             ShennianMessage[]
+  shennianRuns                 ShennianRun[]
+  weComAccounts                WeComAccount[]
+  feishuAccounts               FeishuAccount[]
+  externalBindings             ExternalConversationBinding[]
+  externalInboundMessages      ExternalInboundMessage[]
+  wechatChannelRuntimes        WechatChannelRuntime[]
+  wechatChannelBindings        WechatChannelBinding[]
+  wechatChannelRunEvents       WechatChannelRunEvent[]
+  billingSubscriptions         BillingSubscription[]
+  billingOrders                BillingOrder[]
+  billingAuditLogs             BillingAuditLog[]
+  inviteCodesIssued            InviteCode[]                  @relation("InviteCodeIssuer")
+  inviteRewardsInvited         InviteReward[]                @relation("InviteRewardInvitee")
+  inviteRewardsReceived        InviteReward[]                @relation("InviteRewardRecipient")
+  promotionSubmissions         PromotionSubmission[]
+  adapterSubmissions           AdapterSubmission[]
+  creditBuckets                CreditBucket[]
+  creditLedger                 CreditLedger[]
+  voiceTaskCompletionNotifies  VoiceTaskCompletionNotify[]
+  voiceIncomingCallIntents     VoiceIncomingCallIntent[]
+  sessionTerminalNotifications SessionTerminalNotification[]
+  agentIdentities              AgentIdentity[]               @relation("AgentIdentityOwnerUser")
+  roomsCreated                 Room[]                        @relation("RoomCreatedBy")
+  roomsOwned                   Room[]                        @relation("RoomOwner")
+  roomMemberships              RoomMembership[]              @relation("RoomMembershipUser")
+  roomMembershipsOwned         RoomMembership[]              @relation("RoomMembershipOwner")
+  roomInvitesCreated           RoomInvite[]                  @relation("RoomInviteCreator")
+  roomInvitesReceived          RoomInvite[]                  @relation("RoomInviteTarget")
+  roomJoinRequests             RoomJoinRequest[]             @relation("RoomJoinApplicant")
+  roomJoinRequestsReviewed     RoomJoinRequest[]             @relation("RoomJoinReviewer")
+  roomBindings                 RoomBinding[]
+  roomBrowserIdentities        RoomBrowserIdentity[]
+  roomBrowserSessions          RoomBrowserSession[]
+  loginIntentsApproved         LoginIntent[]                 @relation("LoginIntentApprovedUser")
+  agentPublicationsOwned       AgentPublication[]           @relation("AgentPublicationOwner")
+  agentDirectConversationsOwned AgentDirectConversation[]    @relation("AgentDirectConversationOwner")
+  agentDirectConversationsVisited AgentDirectConversation[]  @relation("AgentDirectConversationVisitor")
+  agentPublicationBrowserSessions AgentPublicationBrowserSession[]
+  agentDirectAttachments       AgentDirectAttachment[]
+  contactsSaved                UserContact[]                 @relation("UserContactOwner")
+  contactsSavedByOthers        UserContact[]                 @relation("UserContactTargetUser")
+  agentContactRequestsMade     AgentContactRequest[]        @relation("AgentContactRequester")
+  agentContactRequestsOwned    AgentContactRequest[]        @relation("AgentContactOwner")
+  interactiveWorks      InteractiveWork[]
+  interactiveJobs       InteractiveJob[]
+  interactiveActivities InteractiveActivity[]
+  interactiveAssets     InteractiveAsset[]
+}
+
+/** A private, unilateral saved contact; saving never grants access to its target. */
+model UserContact {
+  id                    String         @id @default(cuid())
+  ownerUserId           String
+  targetUserId          String?
+  targetAgentIdentityId String?
+  createdAt             DateTime       @default(now())
+  ownerUser             User           @relation("UserContactOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  targetUser            User?          @relation("UserContactTargetUser", fields: [targetUserId], references: [id], onDelete: Cascade)
+  targetAgentIdentity   AgentIdentity? @relation(fields: [targetAgentIdentityId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerUserId, targetUserId])
+  @@unique([ownerUserId, targetAgentIdentityId])
+  @@index([targetUserId])
+  @@index([targetAgentIdentityId])
+}
+
+/** Release-controlled write fence; readers never infer cutover from shadow rows. */
+model ConversationWriteControl {
+  name      String   @id @db.VarChar(32)
+  mode      String   @default("legacy") @db.VarChar(16)
+  everCanonical Boolean @default(false)
+  updatedAt DateTime @updatedAt
+}
+
+model WeComAccount {
+  id             String                        @id @default(cuid())
+  userId         String
+  qiweGuid       String?                       @unique
+  qiweClientId   String?
+  nickname       String                        @default("")
+  status         String                        @default("pending")
+  loginAreaCode  String?
+  loginAreaName  String?
+  loginQrCodeUrl String?                       @db.Text
+  loginExpiresAt DateTime?
+  rawProfile     Json?
+  lastSyncedAt   DateTime?
+  createdAt      DateTime                      @default(now())
+  updatedAt      DateTime                      @updatedAt
+  user           User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversations  WeComConversation[]
+  bindings       ExternalConversationBinding[]
+
+  @@unique([userId])
+  @@index([status])
+}
+
+model WeComConversation {
+  id                 String                        @id @default(cuid())
+  accountId          String
+  qiweConversationId String
+  type               String                        @default("group")
+  name               String
+  raw                Json?
+  lastMessageAt      DateTime?
+  createdAt          DateTime                      @default(now())
+  updatedAt          DateTime                      @updatedAt
+  account            WeComAccount                  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  bindings           ExternalConversationBinding[]
+
+  @@unique([accountId, qiweConversationId])
+  @@index([accountId, updatedAt])
+}
+
+model FeishuAccount {
+  id                String                        @id @default(cuid())
+  userId            String
+  appId             String                        @unique
+  appSecretCipher   String                        @db.Text
+  verificationToken String?                       @db.Text
+  encryptKeyCipher  String?                       @db.Text
+  tenantKey         String?
+  botOpenId         String?
+  displayName       String                        @default("飞书机器人")
+  status            String                        @default("configured")
+  rawProfile        Json?
+  lastSyncedAt      DateTime?
+  createdAt         DateTime                      @default(now())
+  updatedAt         DateTime                      @updatedAt
+  user              User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversations     FeishuConversation[]
+  bindings          ExternalConversationBinding[]
+
+  @@unique([userId])
+  @@index([status])
+}
+
+model FeishuConversation {
+  id           String                        @id @default(cuid())
+  accountId    String
+  feishuChatId String
+  type         String                        @default("group")
+  name         String
+  raw          Json?
+  lastEventAt  DateTime?
+  createdAt    DateTime                      @default(now())
+  updatedAt    DateTime                      @updatedAt
+  account      FeishuAccount                 @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  bindings     ExternalConversationBinding[]
+
+  @@unique([accountId, feishuChatId])
+  @@index([accountId, updatedAt])
+}
+
+model ExternalConversationBinding {
+  id                   String                   @id @default(cuid())
+  userId               String
+  sessionId            String
+  machineId            String
+  provider             String                   @default("wecom")
+  accountId            String?
+  conversationId       String?
+  feishuAccountId      String?
+  feishuConversationId String?
+  listenMode           String                   @default("mention_only")
+  allowSend            Boolean                  @default(true)
+  systemPrompt         String?                  @db.Text
+  channelToken         String                   @unique @db.VarChar(512)
+  status               String                   @default("active")
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @updatedAt
+  user                 User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session              NianSession              @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  account              WeComAccount?            @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  conversation         WeComConversation?       @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  feishuAccount        FeishuAccount?           @relation(fields: [feishuAccountId], references: [id], onDelete: Cascade)
+  feishuConversation   FeishuConversation?      @relation(fields: [feishuConversationId], references: [id], onDelete: Cascade)
+  inboundMessages      ExternalInboundMessage[]
+
+  @@unique([sessionId, provider])
+  @@index([userId, status])
+  @@index([machineId])
+}
+
+model ExternalInboundMessage {
+  id                     String                      @id @default(cuid())
+  userId                 String
+  bindingId              String
+  sessionId              String
+  provider               String
+  externalAccountId      String
+  externalConversationId String
+  externalMessageId      String
+  conversationName       String                      @default("")
+  conversationType       String                      @default("group")
+  senderId               String                      @default("")
+  senderName             String                      @default("")
+  text                   String                      @db.Text
+  attachments            Json?
+  isMention              Boolean                     @default(false)
+  rawRef                 String?
+  receivedAt             DateTime
+  createdAt              DateTime                    @default(now())
+  updatedAt              DateTime                    @updatedAt
+  user                   User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  binding                ExternalConversationBinding @relation(fields: [bindingId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, bindingId, externalMessageId])
+  @@index([provider, bindingId, receivedAt])
+  @@index([userId, provider, receivedAt])
+}
+
+model WechatChannelRuntime {
+  id                        String                  @id @default(cuid())
+  userId                    String
+  machineId                 String
+  status                    String                  @default("active")
+  pollIntervalSeconds       Int                     @default(300)
+  foregroundPolicy          String                  @default("work")
+  helperVersion             String?                 @db.VarChar(64)
+  clientRuntimeVersion      String?                 @db.VarChar(64)
+  schemaVersion             Int                     @default(1)
+  lastLeftListFingerprint   String?                 @db.VarChar(191)
+  wechatAppDetected         Boolean?
+  accessibilityPermission   String?                 @db.VarChar(32)
+  screenRecordingPermission String?                 @db.VarChar(32)
+  inputMonitoringPermission String?                 @db.VarChar(32)
+  automationPermission      String?                 @db.VarChar(32)
+  helperReady               Boolean?
+  lastPreflightAt           DateTime?
+  lastSeenAt                DateTime?
+  lastScanAt                DateTime?
+  nextScanAt                DateTime?
+  lastRunStatus             String?                 @db.VarChar(64)
+  lastErrorCode             String?                 @db.VarChar(128)
+  lastErrorSummary          String?                 @db.Text
+  createdAt                 DateTime                @default(now())
+  updatedAt                 DateTime                @updatedAt
+  user                      User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  machine                   Machine                 @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  bindings                  WechatChannelBinding[]
+  runEvents                 WechatChannelRunEvent[]
+
+  @@index([userId, machineId])
+  @@index([status, nextScanAt])
+}
+
+model WechatChannelBinding {
+  id                          String                       @id @default(cuid())
+  runtimeId                   String
+  userId                      String
+  machineId                   String
+  sessionId                   String
+  conversationDisplayName     String                       @db.VarChar(191)
+  enabled                     Boolean                      @default(true)
+  allowReply                  Boolean                      @default(true)
+  downloadMedia               Boolean                      @default(true)
+  lastConversationFingerprint String?                      @db.VarChar(191)
+  lastConversationAnchor      Json?
+  lastStructuredAt            DateTime?
+  ledgerRevision              Int                          @default(0)
+  lastInboundRevision         Int                          @default(0)
+  lastOutboundRevision        Int                          @default(0)
+  lastErrorCode               String?                      @db.VarChar(128)
+  lastErrorSummary            String?                      @db.Text
+  createdAt                   DateTime                     @default(now())
+  updatedAt                   DateTime                     @updatedAt
+  runtime                     WechatChannelRuntime         @relation(fields: [runtimeId], references: [id], onDelete: Cascade)
+  user                        User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  machine                     Machine                      @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  session                     NianSession                  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  recentMessages              WechatChannelRecentMessage[]
+  visualVectors               WechatChannelVisualVector[]
+  runEvents                   WechatChannelRunEvent[]
+  outboundReplies             WechatChannelOutboundReply[]
+
+  @@index([runtimeId, enabled])
+  @@index([sessionId])
+  @@index([userId, machineId])
+}
+
+model WechatChannelRecentMessage {
+  id               String                      @id @default(cuid())
+  bindingId        String
+  runtimeId        String
+  sessionId        String
+  windowIndex      Int
+  stableMessageKey String                      @db.VarChar(191)
+  stableKeyVersion Int                         @default(1)
+  senderRole       String                      @db.VarChar(32)
+  senderName       String?                     @db.VarChar(191)
+  kind             String                      @db.VarChar(64)
+  normalizedText   String?                     @db.VarChar(1000)
+  anchorText       String?                     @db.VarChar(1000)
+  anchorMetadata   Json?
+  neighborContext  Json?
+  textExcerpt      String?                     @db.VarChar(500)
+  bbox             Json?
+  mediaMetadata    Json?
+  isBaseline       Boolean                     @default(false)
+  deliveryStatus   String                      @default("seen") @db.VarChar(64)
+  hasVisualVector  Boolean                     @default(false)
+  observedAt       DateTime
+  createdAt        DateTime                    @default(now())
+  updatedAt        DateTime                    @updatedAt
+  binding          WechatChannelBinding        @relation(fields: [bindingId], references: [id], onDelete: Cascade)
+  session          NianSession                 @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  visualVectors    WechatChannelVisualVector[]
+
+  @@index([bindingId, windowIndex])
+  @@index([bindingId, stableMessageKey])
+  @@index([bindingId, observedAt])
+}
+
+model WechatChannelVisualVector {
+  id         String                     @id @default(cuid())
+  bindingId  String
+  messageId  String
+  blockId    String                     @db.VarChar(191)
+  blockKind  String                     @db.VarChar(64)
+  bbox       Json?
+  model      String                     @db.VarChar(128)
+  dims       Int
+  vectorBlob Bytes                      @db.Blob
+  createdAt  DateTime                   @default(now())
+  updatedAt  DateTime                   @updatedAt
+  binding    WechatChannelBinding       @relation(fields: [bindingId], references: [id], onDelete: Cascade)
+  message    WechatChannelRecentMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([bindingId, messageId])
+  @@index([bindingId, blockKind])
+}
+
+model WechatChannelRunEvent {
+  id           String                @id @default(cuid())
+  runtimeId    String
+  bindingId    String?
+  sessionId    String?
+  userId       String
+  machineId    String
+  eventType    String                @db.VarChar(64)
+  status       String                @db.VarChar(64)
+  reasonCode   String?               @db.VarChar(128)
+  usage        Json?
+  latencyMs    Int?
+  modelVersion String?               @db.VarChar(128)
+  traceId      String?               @db.VarChar(128)
+  createdAt    DateTime              @default(now())
+  runtime      WechatChannelRuntime  @relation(fields: [runtimeId], references: [id], onDelete: Cascade)
+  binding      WechatChannelBinding? @relation(fields: [bindingId], references: [id], onDelete: Cascade)
+  user         User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([runtimeId, createdAt])
+  @@index([bindingId, createdAt])
+}
+
+model WechatChannelIdempotency {
+  id             String   @id @default(cuid())
+  scope          String   @db.VarChar(64)
+  idempotencyKey String   @db.VarChar(191)
+  bindingId      String?
+  sessionId      String?
+  status         String   @default("pending") @db.VarChar(64)
+  resultRef      String?  @db.VarChar(191)
+  expiresAt      DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([scope, idempotencyKey])
+  @@index([expiresAt])
+}
+
+model WechatChannelOutboundReply {
+  id                String               @id @default(cuid())
+  replyId           String               @db.VarChar(191)
+  idempotencyKey    String               @unique @db.VarChar(191)
+  bindingId         String
+  runtimeId         String
+  sessionId         String
+  replyBaseRevision Int
+  sendStatus        String               @db.VarChar(64)
+  sentAt            DateTime?
+  confirmedAt       DateTime?
+  failureCode       String?              @db.VarChar(128)
+  lastErrorSummary  String?              @db.Text
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  binding           WechatChannelBinding @relation(fields: [bindingId], references: [id], onDelete: Cascade)
+
+  @@index([bindingId, createdAt])
+  @@index([replyId])
+}
+
+model BillingSubscription {
+  id             String        @id @default(cuid())
+  userId         String
+  organizationId String?
+  productId      String
+  kind           String
+  status         String        @default("active")
+  seatCount      Int           @default(0)
+  startsAt       DateTime      @default(now())
+  expiresAt      DateTime?
+  sourceOrderId  String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status, expiresAt])
+  @@index([productId, status])
+  @@index([organizationId, status, expiresAt])
+}
+
+model BillingOrder {
+  id                    String        @id @default(cuid())
+  userId                String
+  organizationId        String?
+  productId             String
+  productKind           String
+  seatCount             Int           @default(0)
+  amountCents           Int
+  currency              String        @default("CNY")
+  periodMonths          Int           @default(1)
+  provider              String        @default("wechat")
+  providerOrderNo       String        @unique
+  providerTransactionId String?
+  status                String        @default("pending")
+  codeUrl               String?       @db.Text
+  raw                   Json?
+  paidAt                DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization          Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status, createdAt])
+  @@index([productId, status])
+  @@index([organizationId, status, createdAt])
+}
+
+model BillingAuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String   @db.VarChar(64)
+  refType   String?  @db.VarChar(64)
+  refId     String?  @db.VarChar(191)
+  actor     String?  @db.VarChar(191)
+  metadata  Json?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+  @@index([refType, refId])
+}
+
+model InviteCode {
+  id             String         @id @default(cuid())
+  code           String         @unique @db.VarChar(64)
+  issuerId       String
+  status         String         @default("active") @db.VarChar(32)
+  maxRedemptions Int            @default(1)
+  usedCount      Int            @default(0)
+  expiresAt      DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  issuer         User           @relation("InviteCodeIssuer", fields: [issuerId], references: [id], onDelete: Cascade)
+  rewards        InviteReward[]
+
+  @@index([issuerId, status])
+  @@index([status, expiresAt])
+}
+
+model InviteReward {
+  id           String      @id @default(cuid())
+  inviteCodeId String?
+  inviterId    String?
+  inviteeId    String?
+  recipientId  String
+  event        String      @db.VarChar(64)
+  status       String      @default("awarded") @db.VarChar(32)
+  proDays      Int         @default(0)
+  credits      Int         @default(0)
+  metadata     Json?
+  awardedAt    DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  inviteCode   InviteCode? @relation(fields: [inviteCodeId], references: [id], onDelete: SetNull)
+  invitee      User?       @relation("InviteRewardInvitee", fields: [inviteeId], references: [id], onDelete: SetNull)
+  recipient    User        @relation("InviteRewardRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@index([recipientId, event, status])
+  @@index([inviteeId, event])
+  @@index([inviterId, event])
+  @@index([inviteCodeId])
+}
+
+model PromotionSubmission {
+  id               String    @id @default(cuid())
+  userId           String
+  channel          String    @db.VarChar(64)
+  url              String?   @db.Text
+  description      String?   @db.Text
+  status           String    @default("pending") @db.VarChar(32)
+  suggestedProDays Int       @default(0)
+  suggestedCredits Int       @default(0)
+  awardedProDays   Int       @default(0)
+  awardedCredits   Int       @default(0)
+  evidence         Json?
+  reviewedBy       String?   @db.VarChar(191)
+  reviewedAt       DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status, createdAt])
+  @@index([status, createdAt])
+}
+
+model CreditBucket {
+  id              String         @id @default(cuid())
+  userId          String
+  source          String         @db.VarChar(64)
+  amountGranted   Int
+  amountRemaining Int
+  expiresAt       DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ledger          CreditLedger[]
+
+  @@index([userId, expiresAt])
+  @@index([source])
+}
+
+model CreditLedger {
+  id        String        @id @default(cuid())
+  userId    String
+  bucketId  String?
+  delta     Int
+  reason    String        @db.VarChar(64)
+  refType   String?       @db.VarChar(64)
+  refId     String?       @db.VarChar(191)
+  metadata  Json?
+  createdAt DateTime      @default(now())
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bucket    CreditBucket? @relation(fields: [bucketId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([bucketId])
+  @@index([reason, refId])
+}
+
+model QrSession {
+  id                   String   @id @default(cuid())
+  token                String   @unique
+  type                 String
+  status               String   @default("pending")
+  userId               String?
+  machineId            String?
+  deviceId             String?
+  deviceInstallationId String?  @db.VarChar(191)
+  targetPlatform       String?  @db.VarChar(32)
+  targetDeviceName     String?  @db.VarChar(120)
+  expiresAt            DateTime
+  createdAt            DateTime @default(now())
+}
+
+model LoginIntent {
+  id                   String    @id @default(cuid())
+  deviceSecretHash     String    @unique @db.Char(64)
+  daemonInstallationId String?   @db.VarChar(191)
+  machineName          String    @db.VarChar(120)
+  machineOs            String    @db.VarChar(64)
+  agentList            Json      @default("[]")
+  actionType           String    @db.VarChar(64)
+  actionSummary        String    @db.VarChar(255)
+  actionPayloadHash    String    @db.Char(64)
+  returnTo             String    @db.VarChar(512)
+  status               String    @default("waiting_user") @db.VarChar(32)
+  approvedUserId       String?
+  machineId            String?   @unique
+  expiresAt            DateTime
+  approvedAt           DateTime?
+  claimedAt            DateTime?
+  deniedAt             DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  approvedUser         User?     @relation("LoginIntentApprovedUser", fields: [approvedUserId], references: [id], onDelete: SetNull)
+  machine              Machine?  @relation(fields: [machineId], references: [id], onDelete: SetNull)
+
+  @@index([status, expiresAt])
+  @@index([approvedUserId, createdAt])
+}
+
+model Machine {
+  id                         String                 @id @default(cuid())
+  userId                     String?
+  name                       String
+  os                         String
+  agentList                  Json                   @default("[]")
+  agents                     Json?
+  pairToken                  String?                @unique
+  machineToken               String?                @unique @db.VarChar(512)
+  paired                     Boolean                @default(false)
+  lastSeen                   DateTime               @default(now())
+  online                     Boolean                @default(false)
+  cliVersion                 String?
+  sessionSyncProtocolVersion Int?
+  sessionSyncDataEpoch       Int?
+  sessionSyncCapabilities    Json?
+  daemonInstallationId       String?                @db.VarChar(191)
+  deletionRevision           Int                    @default(0)
+  autoUpgrade                String?                @default("none")
+  remoteAccessDisabledAt     DateTime?
+  user                       User?                  @relation(fields: [userId], references: [id])
+  sessions                   NianSession[]
+  projects                   SessionProject[]
+  wechatChannelRuntimes      WechatChannelRuntime[]
+  wechatChannelBindings      WechatChannelBinding[]
+  grants                     MachineGrant[]
+  roomBindings               RoomBinding[]
+  agentIdentities            AgentIdentity[]
+  loginIntent                LoginIntent?
+  adapterSubmissions         AdapterSubmission[]
+
+  @@unique([daemonInstallationId])
+  @@index([userId, daemonInstallationId])
+}
+
+model SessionProject {
+  id               String   @id @db.VarChar(64)
+  machineId        String
+  workDir          String   @db.VarChar(1024)
+  displayName      String   @db.VarChar(255)
+  defaultAgentType String?  @db.VarChar(32)
+  defaultModelId   String?  @db.VarChar(255)
+  lastActivityAt   DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  machine          Machine  @relation(fields: [machineId], references: [id], onDelete: Cascade)
+
+  @@index([machineId, lastActivityAt])
+}
+
+model AdapterSubmission {
+  id             String   @id
+  userId         String?
+  machineId      String?
+  status         String   @default("pending") @db.VarChar(32)
+  filename       String   @db.VarChar(64)
+  objectKey      String   @unique @db.VarChar(512)
+  byteSize       Int
+  sha256         String   @db.Char(64)
+  targetAgent    String   @db.VarChar(191)
+  adapterName    String   @db.VarChar(191)
+  adapterVersion String   @db.VarChar(64)
+  clientVersion  String   @db.VarChar(64)
+  platform       String   @db.VarChar(32)
+  checkedAt      DateTime
+  checkSummary   Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  machine        Machine? @relation(fields: [machineId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, sha256])
+  @@index([status, createdAt])
+  @@index([targetAgent, createdAt])
+}
+
+model Organization {
+  id                   String                @id @default(cuid())
+  name                 String
+  ownerId              String
+  inviteCode           String                @unique
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  owner                User                  @relation("OrganizationOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members              OrganizationMember[]
+  invites              OrganizationInvite[]
+  machineGrants        MachineGrant[]
+  billingSubscriptions BillingSubscription[]
+  billingOrders        BillingOrder[]
+  agentIdentities      AgentIdentity[]       @relation("AgentIdentityOwnerOrganization")
+
+  @@index([ownerId])
+}
+
+model OrganizationMember {
+  id             String       @id @default(cuid())
+  organizationId String
+  userId         String
+  role           String       @default("member")
+  seatStatus     String       @default("active") @db.VarChar(32)
+  seatSource     String?      @db.VarChar(64)
+  seatExpiresAt  DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+  @@index([organizationId, seatStatus])
+  @@index([userId, seatStatus])
+}
+
+model OrganizationInvite {
+  id             String       @id @default(cuid())
+  organizationId String
+  code           String       @unique
+  createdById    String
+  revokedAt      DateTime?
+  expiresAt      DateTime?
+  createdAt      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdBy      User         @relation("OrganizationInviteCreator", fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, revokedAt])
+}
+
+model NianSession {
+  cloudBodyRevision             Int                           @default(0)
+  cloudBodyNextAttemptAt        DateTime                      @default("1970-01-01T00:00:00.000Z")
+  cloudBodyMutations            PersonalSessionCloudMutation[]
+  id                            String                        @id @default(cuid())
+  creationKey                   String?                       @unique @db.VarChar(191)
+  machineId                     String
+  userId                        String
+  agentType                     String
+  sessionMode                   String                        @default("standard") @db.VarChar(32)
+  nativeSessionVisibility       String                        @default("user") @db.VarChar(16)
+  sessionScope                  String                        @default("personal") @db.VarChar(16)
+  managerConfig                 Json?
+  agentSessionId                String?
+  modelId                       String?
+  modelSource                   String                        @default("session") @db.VarChar(16)
+  managerDefaultWorkerAgentType String?
+  managerDefaultWorkerModelId   String?
+  title                         String                        @default("")
+  titleSource                   String                        @default("first_user_fallback") @db.VarChar(32)
+  titleRevision                 Int                           @default(0)
+  titleLockedByUser             Boolean                       @default(false)
+  titleOriginEventId            String?
+  status                        String                        @default("active")
+  workDir                       String                        @default("")
+  lastMessagePreview            String?                       @db.VarChar(200)
+  lastMessagePreviewMessageId   String?                       @db.VarChar(191)
+  lastMessagePreviewAt          DateTime?
+  lastVisibleEventAt            DateTime?
+  bodyStorageMode               String                        @default("machine_local") @db.VarChar(32)
+  bodyRevision                  Int                           @default(0)
+  indexRevision                 Int                           @default(0)
+  dataEpoch                     Int?
+  daemonInstallationId          String?                       @db.VarChar(191)
+  localReadyAt                  DateTime?
+  firstUserMessageId            String?                       @db.VarChar(191)
+  firstUserBodyRevision         Int?
+  firstAvailableSeq             Int?
+  visibleMessageCount           Int                           @default(0)
+  lastVisibleMessageId          String?
+  attentionCount                Int                           @default(0)
+  lastAttentionId               String?                       @db.VarChar(191)
+  lastBodyCommittedAt           DateTime?
+  deletionRevision              Int                           @default(0)
+  lastActivityAt                DateTime                      @default(now())
+  deletedAt                     DateTime?
+  createdAt                     DateTime                      @default(now())
+  updatedAt                     DateTime                      @updatedAt
+  agentIdentityId               String?
+  conversationRoomId            String?
+  machine                       Machine                       @relation(fields: [machineId], references: [id])
+  roomNativeSources             RoomNativeSourceSession[]
+  userStates                    SessionUserState[]
+  externalBindings              ExternalConversationBinding[]
+  wechatChannelBindings         WechatChannelBinding[]
+  wechatChannelRecentMessages   WechatChannelRecentMessage[]
+  voiceTaskCompletionNotifies   VoiceTaskCompletionNotify[]
+  terminalNotifications         SessionTerminalNotification[]
+  schedules                     ConversationSchedule[]
+  roomBinding                   RoomBinding?
+  conversationRoom              Room?                         @relation("ConversationExecutionSession", fields: [conversationRoomId], references: [id], onDelete: SetNull)
+  roomMigration                 SessionRoomMigration?
+  roomMutationReceipts          SessionRoomMutationReceipt[]
+  agentIdentity                 AgentIdentity?                @relation(fields: [agentIdentityId], references: [id], onDelete: SetNull)
+
+  @@index([cloudBodyNextAttemptAt])
+  @@index([machineId, deletedAt, lastActivityAt])
+  @@index([machineId, indexRevision])
+  @@index([updatedAt])
+  @@index([agentIdentityId, deletedAt, lastActivityAt])
+  @@index([conversationRoomId, deletedAt])
+  @@index([userId, sessionScope, deletedAt, lastActivityAt])
+}
+
+model SessionTerminalNotification {
+  id                           String      @id @default(cuid())
+  sessionId                    String
+  userId                       String
+  terminalBodyRevision         Int
+  terminalAttentionId          String      @db.VarChar(191)
+  terminalAttentionCount       Int?
+  terminalState                String      @db.VarChar(16)
+  notificationTitle            String?     @db.VarChar(120)
+  notificationBody             String?     @db.VarChar(200)
+  notificationPreviewMessageId String?     @db.VarChar(191)
+  notificationPreviewAt        DateTime?
+  status                       String      @default("pending") @db.VarChar(16)
+  attempts                     Int         @default(0)
+  availableAt                  DateTime    @default(now())
+  leaseUntil                   DateTime?
+  sentAt                       DateTime?
+  lastErrorCode                String?     @db.VarChar(191)
+  createdAt                    DateTime    @default(now())
+  updatedAt                    DateTime    @updatedAt
+  session                      NianSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user                         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, terminalBodyRevision], map: "SessionTerminalNotification_session_revision")
+  @@unique([sessionId, terminalAttentionId], map: "SessionTerminalNotification_session_attention")
+  @@index([status, availableAt])
+  @@index([userId, createdAt])
+}
+
+model SessionDeletion {
+  sessionId            String    @id
+  userId               String
+  machineId            String
+  daemonInstallationId String    @db.VarChar(191)
+  deletionRevision     Int
+  dataEpoch            Int       @default(2)
+  nativeCleanupPolicy  String    @default("none") @db.VarChar(16)
+  workDir              String?   @db.Text
+  deletedAt            DateTime  @default(now())
+  daemonAckedAt        DateTime?
+  createdAt            DateTime  @default(now())
+
+  @@index([userId, deletedAt])
+  @@index([machineId, deletionRevision])
+}
+
+model PersonalEpochPurgeQueue {
+  sessionId String   @id @db.VarChar(191)
+  createdAt DateTime @default(now())
+}
+
+model RoomNativeSourceSession {
+  id               String      @id @default(cuid())
+  sessionId        String
+  machineId        String
+  agentType        String
+  sourceSessionKey String
+  sourceMode       String
+  lastCursor       String?
+  lastImportedAt   DateTime    @default(now())
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  session          NianSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([machineId, agentType, sourceSessionKey], map: "RoomNativeSourceSession_source_key")
+  @@index([sessionId])
+}
+
+model NativeSourceDeletion {
+  id                   String    @id @default(cuid())
+  accountId            String
+  sessionId            String
+  machineId            String
+  daemonInstallationId String    @db.VarChar(191)
+  agentType            String
+  sourceSessionKey     String    @db.Text
+  sourceSessionKeyHash String    @db.VarChar(64)
+  deletionRevision     Int
+  dataEpoch            Int       @default(2)
+  deletedAt            DateTime  @default(now())
+  acknowledgedAt       DateTime?
+  createdAt            DateTime  @default(now())
+
+  @@unique([daemonInstallationId, agentType, sourceSessionKeyHash], map: "NativeSourceDeletion_machine_source_key")
+  @@index([machineId, deletionRevision])
+  @@index([accountId, deletedAt])
+}
+
+model SessionUserState {
+  userId                      String
+  sessionId                   String
+  pinnedAt                    DateTime?
+  lastReadAt                  DateTime?
+  lastReadBodyRevision        Int         @default(0)
+  lastReadVisibleMessageCount Int         @default(0)
+  lastReadVisibleMessageId    String?
+  lastReadAttentionCount      Int         @default(0)
+  lastReadAttentionId         String?     @db.VarChar(191)
+  manualUnread                Boolean     @default(false)
+  createdAt                   DateTime    @default(now())
+  updatedAt                   DateTime    @updatedAt
+  user                        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session                     NianSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, sessionId])
+  @@index([sessionId])
+}
+
+model MachineGrant {
+  id             String        @id @default(cuid())
+  machineId      String
+  granterId      String
+  granteeId      String?
+  organizationId String?
+  permission     String
+  token          String        @unique
+  expiresAt      DateTime?
+  revokedAt      DateTime?
+  createdAt      DateTime      @default(now())
+  machine        Machine       @relation(fields: [machineId], references: [id])
+  granter        User          @relation("Granter", fields: [granterId], references: [id])
+  grantee        User?         @relation("Grantee", fields: [granteeId], references: [id])
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@index([machineId, organizationId])
+  @@index([organizationId, revokedAt])
+}
+
+model Device {
+  id                String                   @id @default(cuid())
+  userId            String
+  installationId    String?                  @db.VarChar(191)
+  platform          String
+  name              String                   @default("")
+  accessToken       String                   @unique @db.VarChar(512)
+  refreshToken      String                   @unique @db.VarChar(512)
+  tokenExpiry       DateTime
+  refreshExpiry     DateTime
+  pushToken         String?                  @db.Text
+  lastActiveAt      DateTime                 @default(now())
+  createdAt         DateTime                 @default(now())
+  user              User                     @relation(fields: [userId], references: [id])
+  pushRegistrations DevicePushRegistration[]
+
+  @@unique([userId, installationId])
+  @@index([userId])
+}
+
+model DevicePushRegistration {
+  id        String   @id @default(cuid())
+  deviceId  String
+  userId    String
+  provider  String   @db.VarChar(32)
+  platform  String   @db.VarChar(32)
+  token     String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([deviceId, provider])
+  @@index([userId, platform, provider])
+}
+
+model VoiceChiefMemory {
+  id             String    @id @default(cuid())
+  userId         String    @unique
+  summary        String    @db.MediumText
+  pendingContext String    @db.MediumText
+  compressedAt   DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([updatedAt])
+}
+
+// One private Shennian conversation per user. The UI never exposes tool traces.
+model ShennianMessage {
+  id              String   @id @default(cuid())
+  userId          String
+  role            String   @db.VarChar(16)
+  text            String   @db.MediumText
+  links           Json?
+  clientMessageId String?  @db.VarChar(191)
+  eventKey        String?  @unique @db.VarChar(191)
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientMessageId])
+  @@index([userId, createdAt, id])
+}
+
+model ShennianRun {
+  id          String    @id @default(cuid())
+  userId      String
+  triggerKey  String    @unique @db.VarChar(191)
+  triggerText String    @db.Text
+  status      String    @default("pending") @db.VarChar(16)
+  attempts    Int       @default(0)
+  availableAt DateTime  @default(now())
+  leaseUntil  DateTime?
+  lastError   String?   @db.VarChar(191)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, availableAt])
+  @@index([userId, createdAt])
+}
+
+model VoiceTaskCompletionNotify {
+  id                   String      @id @default(cuid())
+  userId               String
+  sessionId            String
+  mode                 String      @default("message") @db.VarChar(32)
+  status               String      @default("pending") @db.VarChar(32)
+  reason               String?     @db.VarChar(191)
+  initialPrompt        String?     @db.VarChar(1000)
+  projectHint          String?     @db.VarChar(191)
+  sourceConversationId String?     @db.VarChar(191)
+  sourceCallId         String?     @db.VarChar(191)
+  completedRunId       String?     @db.VarChar(191)
+  callId               String?     @db.VarChar(191)
+  attempts             Int         @default(0)
+  availableAt          DateTime    @default(now())
+  leaseUntil           DateTime?
+  workerId             String?     @db.VarChar(191)
+  errorMessage         String?     @db.Text
+  completedAt          DateTime?
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+  user                 User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session              NianSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, status, createdAt])
+  @@index([userId, status, createdAt])
+  @@index([status, availableAt])
+}
+
+model VoiceIncomingCallIntent {
+  id             String    @id @default(cuid())
+  userId         String
+  callId         String    @db.VarChar(191)
+  status         String    @default("pending") @db.VarChar(32)
+  reason         String?   @db.VarChar(191)
+  initialPrompt  String?   @db.VarChar(1000)
+  projectHint    String?   @db.VarChar(191)
+  targetPlatform String?   @db.VarChar(32)
+  attempts       Int       @default(0)
+  availableAt    DateTime  @default(now())
+  leaseUntil     DateTime?
+  workerId       String?   @db.VarChar(191)
+  errorMessage   String?   @db.Text
+  deliveredAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, callId])
+  @@index([status, availableAt])
+  @@index([userId, createdAt])
+}
+
+model DownloadLog {
+  id        String   @id @default(cuid())
+  platform  String
+  version   String
+  ip        String?
+  userAgent String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([platform, createdAt])
+}
+
+model RequestLog {
+  id        BigInt  @id @default(autoincrement())
+  traceId   String  @db.VarChar(32)
+  userId    String? @db.VarChar(64)
+  machineId String? @db.VarChar(64)
+  sessionId String? @db.VarChar(64)
+
+  source String // 'app' | 'cli' | 'managed_agent' | 'system' (legacy 'server' remains readable)
+  type   String // 'http' | 'ws' | 'internal'
+  level  String // 'debug' | 'info' | 'warn' | 'error'
+
+  method     String? @db.VarChar(16)
+  path       String? @db.VarChar(512)
+  statusCode Int?    @db.SmallInt
+
+  wsEvent     String? @db.VarChar(128)
+  wsDirection String? // 'in' | 'out'
+
+  payload      Json?
+  errorMessage String? @db.Text
+  errorStack   String? @db.Text
+  durationMs   Int?
+  metadata     Json?
+
+  createdAt DateTime @default(now()) @db.DateTime(3)
+
+  @@index([traceId], map: "idx_trace")
+  @@index([userId, createdAt], map: "idx_user_time")
+  @@index([sessionId, createdAt], map: "idx_session")
+  @@index([level, createdAt], map: "idx_level")
+  @@index([createdAt], map: "idx_cleanup")
+}
+
+// @arch docs/features/privacy-account-deletion-and-retention-todo.md#31-securityauditevent
+model SecurityAuditEvent {
+  id          BigInt   @id @default(autoincrement())
+  occurredAt  DateTime @default(now()) @db.DateTime(3)
+  expiresAt   DateTime @db.DateTime(3)
+  eventType   String   @db.VarChar(96)
+  result      String   @db.VarChar(16)
+  actorUserId String?  @db.VarChar(64)
+  deviceId    String?  @db.VarChar(64)
+  machineId   String?  @db.VarChar(64)
+  roomId      String?  @db.VarChar(191)
+  sourceIp    String?  @db.VarChar(64)
+  method      String?  @db.VarChar(16)
+  path        String?  @db.VarChar(512)
+  statusCode  Int?     @db.SmallInt
+  traceId     String?  @db.VarChar(32)
+  reasonCode  String?  @db.VarChar(96)
+
+  @@index([expiresAt])
+  @@index([actorUserId, occurredAt])
+  @@index([roomId, occurredAt])
+  @@index([eventType, occurredAt])
+}
+
+// @arch docs/features/privacy-account-deletion-and-retention-todo.md#35-注销后的-room-身份
+model AccountDeletionOperation {
+  operationHash String   @id @db.VarChar(64)
+  status        String   @db.VarChar(16)
+  completedAt   DateTime @db.DateTime(3)
+  expiresAt     DateTime @db.DateTime(3)
+  createdAt     DateTime @default(now()) @db.DateTime(3)
+
+  @@index([expiresAt])
+}
+
+// @arch docs/features/network-rooms/core-data-and-security-decisions.md
+// @arch docs/features/managed-agent-restricted-runtime.md
+model AgentIdentity {
+  id                      String           @id @default(cuid())
+  ownerType               String           @default("user") @db.VarChar(32)
+  ownerUserId             String?
+  ownerOrganizationId     String?
+  displayName             String           @db.VarChar(191)
+  description             String           @default("") @db.VarChar(1000)
+  systemPrompt            String           @default("") @db.Text
+  avatarVersion           String?          @db.VarChar(43)
+  avatarOriginalObjectKey String?          @db.VarChar(512)
+  avatarSmallObjectKey    String?          @db.VarChar(512)
+  avatarMediumObjectKey   String?          @db.VarChar(512)
+  avatarUpdatedAt         DateTime?
+  machineId               String?
+  runtimeAdapter          String?          @db.VarChar(64)
+  workDir                 String           @default("") @db.VarChar(1024)
+  modelId                 String?          @db.VarChar(191)
+  sessionMode             String           @default("standard") @db.VarChar(32)
+  managerConfig           Json?
+  permissionPolicy        Json
+  permissionPolicyVersion Int              @default(1)
+  permissionConfirmation  Json?
+  configurationVersion    Int              @default(1)
+  status                  String           @default("active") @db.VarChar(32)
+  pinnedAt                DateTime?
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  ownerUser               User?            @relation("AgentIdentityOwnerUser", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  ownerOrganization       Organization?    @relation("AgentIdentityOwnerOrganization", fields: [ownerOrganizationId], references: [id], onDelete: Cascade)
+  memberships             RoomMembership[]
+  bindings                RoomBinding[]
+  machine                 Machine?         @relation(fields: [machineId], references: [id], onDelete: SetNull)
+  sessions                NianSession[]
+  publication             AgentPublication?
+  directConversations     AgentDirectConversation[]
+  contactsSavedByOthers   UserContact[]
+  contactRequests         AgentContactRequest[]
+
+  @@index([ownerUserId, status])
+  @@index([ownerOrganizationId, status])
+  @@index([machineId, status])
+  @@index([ownerUserId, pinnedAt, updatedAt])
+}
+
+// @arch docs/features/published-agent-direct-conversations.md#7-2026-09-25-代码调查与实现裁决
+// One stable logical publication per Agent. Rotating publicId and generation
+// invalidates every older URL without deleting existing visitor history.
+model AgentPublication {
+  id              String                    @id @default(cuid())
+  agentIdentityId String                    @unique
+  ownerUserId     String
+  publicId        String                    @unique @db.VarChar(64)
+  generation      Int                       @default(1)
+  status          String                    @default("draft") @db.VarChar(32)
+  plazaListed     Boolean                   @default(false)
+  allowNewContacts Boolean                  @default(true)
+  requireContactApproval Boolean            @default(false)
+  allowAnonymousVisitors Boolean            @default(false)
+  displayName     String                    @db.VarChar(191)
+  description     String                    @default("") @db.VarChar(1000)
+  suggestedQuestions Json?
+  dailyMessageLimit Int                     @default(100)
+  quotaDay        String                    @default("") @db.VarChar(10)
+  quotaUsed       Int                       @default(0)
+  policyVersion   Int                       @default(1)
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+  revokedAt       DateTime?
+  agentIdentity   AgentIdentity             @relation(fields: [agentIdentityId], references: [id], onDelete: Restrict)
+  ownerUser       User                      @relation("AgentPublicationOwner", fields: [ownerUserId], references: [id], onDelete: Restrict)
+  conversations   AgentDirectConversation[]
+  directAttachments AgentDirectAttachment[]
+  browserSessions AgentPublicationBrowserSession[]
+  contactRequests AgentContactRequest[]
+
+  @@index([ownerUserId, status, updatedAt])
+}
+
+// A request never grants contact or conversation access until the owner approves it.
+model AgentContactRequest {
+  id              String           @id @default(cuid())
+  publicationId   String
+  agentIdentityId String
+  ownerUserId     String
+  requesterUserId String
+  status          String           @default("pending") @db.VarChar(32)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  publication     AgentPublication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  agentIdentity   AgentIdentity    @relation(fields: [agentIdentityId], references: [id], onDelete: Cascade)
+  ownerUser       User             @relation("AgentContactOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  requesterUser   User             @relation("AgentContactRequester", fields: [requesterUserId], references: [id], onDelete: Cascade)
+
+  @@unique([agentIdentityId, requesterUserId])
+  @@index([ownerUserId, status, createdAt])
+}
+
+// A browser proof grants access only to one publication and one verified user.
+// It never participates in account, Room, or machine authentication.
+model AgentPublicationBrowserSession {
+  id            String           @id @default(cuid())
+  tokenHash     String           @unique @db.VarChar(64)
+  publicationId String
+  issuedPublicId String?          @db.VarChar(32)
+  userId        String
+  accessKind    String           @default("account") @db.VarChar(16)
+  status        String           @default("active") @db.VarChar(32)
+  expiresAt     DateTime
+  createdAt     DateTime         @default(now())
+  lastSeenAt    DateTime         @default(now())
+  publication   AgentPublication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([publicationId, userId, status, expiresAt], map: "AgentPubBrowser_pub_user_status_exp_idx")
+  @@index([userId, status, expiresAt], map: "AgentPubBrowser_user_status_exp_idx")
+}
+
+// A visitor has exactly one logical conversation with an Agent, even across
+// publication generations and internal native Session replacements.
+model AgentDirectConversation {
+  id              String               @id @default(cuid())
+  publicationId   String
+  agentIdentityId String
+  ownerUserId     String
+  visitorUserId   String
+  roomId          String?              @unique
+  canonicalState  String               @default("legacy") @db.VarChar(16)
+  canonicalCopiedSequence BigInt       @default(0)
+  status          String               @default("active") @db.VarChar(32)
+  nextSequence    BigInt               @default(0)
+  lastActivityAt  DateTime             @default(now())
+  ownerLastViewedAt DateTime?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  publication     AgentPublication     @relation(fields: [publicationId], references: [id], onDelete: Restrict)
+  agentIdentity   AgentIdentity        @relation(fields: [agentIdentityId], references: [id], onDelete: Restrict)
+  ownerUser       User                 @relation("AgentDirectConversationOwner", fields: [ownerUserId], references: [id], onDelete: Restrict)
+  visitorUser     User                 @relation("AgentDirectConversationVisitor", fields: [visitorUserId], references: [id], onDelete: Restrict)
+  room            Room?                @relation("LegacyDirectConversationRoom", fields: [roomId], references: [id], onDelete: Restrict)
+  messages        AgentDirectMessage[]
+  binding         AgentDirectBinding?
+
+  @@unique([agentIdentityId, visitorUserId])
+  @@index([ownerUserId, agentIdentityId, lastActivityAt, id])
+  @@index([visitorUserId, lastActivityAt, id])
+  @@index([publicationId, status, lastActivityAt])
+}
+
+model AgentDirectMessage {
+  id                 String                  @id @default(cuid())
+  conversationId     String
+  sequence           BigInt
+  authorRole         String                  @db.VarChar(16)
+  clientMessageId    String                  @db.VarChar(191)
+  publicationGeneration Int                   @default(1)
+  policyVersion      Int                     @default(1)
+  agentConfigurationVersion Int                @default(1)
+  text               String?                 @db.MediumText
+  roomMessageId      String?                 @unique
+  status             String                  @default("sent") @db.VarChar(32)
+  failureCode        String?                 @db.VarChar(32)
+  attempts           Int                     @default(0)
+  claimTokenHash     String?                 @db.VarChar(64)
+  leaseExpiresAt     DateTime?
+  createdAt          DateTime                @default(now())
+  conversation       AgentDirectConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  roomMessage        RoomMessage?            @relation("LegacyDirectMessageRoom", fields: [roomMessageId], references: [id], onDelete: Restrict)
+  attachments        AgentDirectAttachment[]
+
+  @@unique([conversationId, sequence])
+  @@unique([conversationId, authorRole, clientMessageId])
+  @@index([conversationId, createdAt])
+  @@index([status, leaseExpiresAt, createdAt])
+}
+
+// Staged by one public-link visitor, then bound atomically to their sent turn.
+model AgentDirectAttachment {
+  id             String             @id @default(cuid())
+  publicationId  String
+  visitorUserId  String
+  uploadIntentId String             @unique @db.VarChar(191)
+  messageId      String?
+  status         String             @default("pending") @db.VarChar(16)
+  objectKey      String             @unique @db.VarChar(512)
+  name           String             @db.VarChar(255)
+  mimeType       String             @db.VarChar(191)
+  mediaKind      String             @db.VarChar(16)
+  byteSize       BigInt
+  sha256         String             @db.VarChar(64)
+  createdAt      DateTime           @default(now())
+  readyAt        DateTime?
+  expiresAt      DateTime?
+  publication    AgentPublication   @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  visitor        User               @relation(fields: [visitorUserId], references: [id], onDelete: Cascade)
+  message        AgentDirectMessage? @relation(fields: [messageId], references: [id], onDelete: SetNull)
+
+  @@index([publicationId, visitorUserId, status, createdAt], map: "AgentDirectAttachment_lookup_idx")
+  @@index([messageId])
+  @@index([status, expiresAt])
+}
+
+// Native Session is replaceable; the logical conversation and messages are not.
+model AgentDirectBinding {
+  id                   String                  @id @default(cuid())
+  conversationId       String                  @unique
+  nianSessionId        String?                 @unique
+  machineId            String
+  runtimeAdapter       String                  @db.VarChar(64)
+  bindingEpoch         Int                     @default(1)
+  appliedPolicyVersion Int                     @default(1)
+  lastDeliveredSequence BigInt                 @default(0)
+  status               String                  @default("pending") @db.VarChar(32)
+  createdAt            DateTime                @default(now())
+  updatedAt            DateTime                @updatedAt
+  conversation         AgentDirectConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([machineId, status])
+}
+
+// @arch docs/features/network-rooms/implementation-plan.md
+model Room {
+  id                      String               @id @default(cuid())
+  name                    String               @db.VarChar(191)
+  creationRequestHash     String?              @db.VarChar(64)
+  conversationKind        String               @default("group") @db.VarChar(32)
+  description             String               @default("") @db.VarChar(1000)
+  createdByUserId         String
+  ownerUserId             String
+  status                  String               @default("active") @db.VarChar(32)
+  visibility              String               @default("private") @db.VarChar(32)
+  joinPolicy              String               @default("open") @db.VarChar(32)
+  inviteVersion           Int                  @default(1)
+  nextSequence            BigInt               @default(0)
+  maxHumanMembers         Int                  @default(1000)
+  maxAgentsPerUser        Int                  @default(1)
+  maxAgentsPerRoom        Int                  @default(20)
+  maxAutoFollowAgents     Int                  @default(3)
+  messageRetentionDays    Int?
+  attachmentRetentionDays Int?
+  officialSequence        Int?                 @unique
+  officialInviteToken     String?              @db.VarChar(191)
+  archivedAt              DateTime?
+  deletedAt               DateTime?
+  createdAt               DateTime             @default(now())
+  updatedAt               DateTime             @updatedAt
+  createdBy               User                 @relation("RoomCreatedBy", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  owner                   User                 @relation("RoomOwner", fields: [ownerUserId], references: [id], onDelete: Restrict)
+  memberships             RoomMembership[]
+  invites                 RoomInvite[]
+  joinRequests            RoomJoinRequest[]
+  messages                RoomMessage[]
+  readStates              RoomReadState[]
+  attachments             RoomAttachment[]
+  bindings                RoomBinding[]
+  browserSessions         RoomBrowserSession[]
+  legacyDirectConversation AgentDirectConversation? @relation("LegacyDirectConversationRoom")
+  executionSessions       NianSession[]        @relation("ConversationExecutionSession")
+  sessionMigrations       SessionRoomMigration[]
+
+  @@index([ownerUserId, status, updatedAt])
+  @@index([createdByUserId, createdAt])
+  @@index([visibility, status, updatedAt])
+  @@index([conversationKind, status, updatedAt])
+}
+
+// @arch docs/features/network-rooms/core-data-and-security-decisions.md
+model RoomMembership {
+  id                      String               @id @default(cuid())
+  roomId                  String
+  principalType           String               @db.VarChar(16)
+  principalKey            String               @db.VarChar(255)
+  userId                  String?
+  agentIdentityId         String?
+  ownerUserId             String
+  parentHumanMembershipId String?
+  displayAlias            String               @db.VarChar(191)
+  role                    String               @default("member") @db.VarChar(32)
+  status                  String               @default("active") @db.VarChar(32)
+  historyFromSequence     BigInt               @default(1)
+  historyThroughSequence  BigInt?
+  membershipEpoch         Int                  @default(1)
+  joinedAt                DateTime             @default(now())
+  removedAt               DateTime?
+  pinnedAt                DateTime?
+  muteRegularNotifications Boolean              @default(false)
+  muteMentionNotifications Boolean              @default(false)
+  updatedAt               DateTime             @updatedAt
+  room                    Room                 @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user                    User?                @relation("RoomMembershipUser", fields: [userId], references: [id], onDelete: SetNull)
+  agentIdentity           AgentIdentity?       @relation(fields: [agentIdentityId], references: [id], onDelete: SetNull)
+  ownerUser               User                 @relation("RoomMembershipOwner", fields: [ownerUserId], references: [id], onDelete: Restrict)
+  parentHumanMembership   RoomMembership?      @relation("RoomMembershipHierarchy", fields: [parentHumanMembershipId], references: [id], onDelete: Cascade)
+  agentChildren           RoomMembership[]     @relation("RoomMembershipHierarchy")
+  messages                RoomMessage[]
+  readState               RoomReadState?
+  uploadedAttachments     RoomAttachment[]
+  binding                 RoomBinding?
+  browserSessions         RoomBrowserSession[]
+
+  @@unique([roomId, principalKey])
+  @@index([roomId, status, principalType])
+  @@index([ownerUserId, roomId, status])
+  @@index([parentHumanMembershipId, status])
+  @@index([userId, pinnedAt, updatedAt])
+}
+
+// @arch docs/features/network-rooms/core-data-and-security-decisions.md
+model RoomInvite {
+  id              String                   @id @default(cuid())
+  roomId          String
+  tokenHash       String                   @unique @db.VarChar(64)
+  createdByUserId String
+  targetUserId    String?
+  status          String                   @default("active") @db.VarChar(32)
+  expiresAt       DateTime?
+  maxUses         Int?
+  useCount        Int                      @default(0)
+  requestCount    Int                      @default(0)
+  revokedAt       DateTime?
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  room            Room                     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  createdBy       User                     @relation("RoomInviteCreator", fields: [createdByUserId], references: [id], onDelete: Cascade)
+  targetUser      User?                    @relation("RoomInviteTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
+  joinRequests    RoomJoinRequest[]
+  browserStates   RoomInviteBrowserState[]
+
+  @@index([roomId, status, createdAt])
+  @@index([createdByUserId, createdAt])
+  @@index([targetUserId, status, createdAt])
+}
+
+// @arch docs/features/network-rooms/core-data-and-security-decisions.md#七邀请-token-进入浏览器后的安全处理
+model RoomInviteBrowserState {
+  id         String     @id @default(cuid())
+  stateHash  String     @unique @db.VarChar(64)
+  inviteId   String
+  status     String     @default("active") @db.VarChar(32)
+  expiresAt  DateTime
+  consumedAt DateTime?
+  lastSeenAt DateTime   @default(now())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  invite     RoomInvite @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+
+  @@index([inviteId, status, expiresAt])
+  @@index([status, expiresAt])
+}
+
+// @arch docs/features/network-rooms/scoped-browser-access.md
+model RoomBrowserIdentity {
+  id        String               @id @default(cuid())
+  tokenHash String               @unique @db.VarChar(64)
+  userId    String
+  status    String               @default("active") @db.VarChar(32)
+  expiresAt DateTime
+  createdAt DateTime             @default(now())
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions  RoomBrowserSession[]
+
+  @@index([userId, status, expiresAt])
+}
+
+// @arch docs/features/network-rooms/scoped-browser-access.md
+model RoomBrowserSession {
+  authorizationVersion Int                  @default(1)
+  clientLabel          String?              @db.VarChar(96)
+  identityId           String?
+  identity             RoomBrowserIdentity? @relation(fields: [identityId], references: [id], onDelete: Cascade)
+  id                   String               @id @default(cuid())
+  tokenHash            String               @unique @db.VarChar(64)
+  roomId               String
+  userId               String
+  membershipId         String
+  status               String               @default("active") @db.VarChar(32)
+  expiresAt            DateTime
+  lastSeenAt           DateTime             @default(now())
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  room                 Room                 @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user                 User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  membership           RoomMembership       @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@unique([identityId, roomId])
+  @@index([roomId, status, expiresAt])
+  @@index([userId, status, expiresAt])
+  @@index([membershipId, status])
+}
+
+// @arch docs/features/network-rooms/mobile-control-and-single-room-web.md#74-身份确认方式
+model RoomBrowserApproval {
+  browserSecretHash    String?   @db.VarChar(64)
+  id                   String    @id @default(cuid())
+  tokenHash            String    @unique @db.VarChar(64)
+  roomId               String
+  approvedUserId       String?
+  approvedMembershipId String?
+  status               String    @default("pending") @db.VarChar(32)
+  expiresAt            DateTime
+  approvedAt           DateTime?
+  consumedAt           DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@index([roomId, status, expiresAt])
+  @@index([approvedUserId, status, expiresAt])
+  @@index([expiresAt])
+}
+
+// @arch docs/features/network-rooms/implementation-plan.md
+model RoomJoinRequest {
+  id                  String       @id @default(cuid())
+  roomId              String
+  inviteId            String
+  applicantUserId     String
+  pendingKey          String?      @unique @db.VarChar(255)
+  message             String       @default("") @db.VarChar(500)
+  requestedAgentAlias String?      @db.VarChar(191)
+  pendingBindingId    String?      @unique
+  status              String       @default("pending") @db.VarChar(32)
+  reviewedByUserId    String?
+  createdAt           DateTime     @default(now())
+  reviewedAt          DateTime?
+  updatedAt           DateTime     @updatedAt
+  room                Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  invite              RoomInvite   @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+  applicant           User         @relation("RoomJoinApplicant", fields: [applicantUserId], references: [id], onDelete: Cascade)
+  reviewedBy          User?        @relation("RoomJoinReviewer", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
+  pendingBinding      RoomBinding? @relation(fields: [pendingBindingId], references: [id], onDelete: SetNull)
+
+  @@index([roomId, status, createdAt])
+  @@index([applicantUserId, status, createdAt])
+}
+
+// @arch docs/features/network-rooms/message-and-attachment-storage.md
+model RoomMessage {
+  id                           String           @id @default(cuid())
+  roomId                       String
+  sequence                     BigInt
+  authorMembershipId           String
+  authorPrincipalTypeSnapshot  String           @db.VarChar(16)
+  ownerUserIdSnapshot          String
+  authorDisplayNameSnapshot    String           @db.VarChar(191)
+  ownerDisplayNameSnapshot     String?          @db.VarChar(191)
+  authorAvatarSnapshot         Json?
+  mentionSnapshots             Json?
+  kind                         String           @default("text") @db.VarChar(32)
+  source                       String           @default("app") @db.VarChar(32)
+  deliveryStatus               String?          @db.VarChar(32)
+  sessionSourceId              String?          @db.VarChar(191)
+  sessionMessageId             String?          @db.VarChar(191)
+  sessionRevision              Int?
+  sessionContentHash           String?          @db.VarChar(64)
+  text                         String?          @db.MediumText
+  replyToMessageId             String?
+  clientMessageId              String           @db.VarChar(191)
+  activationCauseMessageId     String?          @db.VarChar(191)
+  activationRootCauseMessageId String?          @db.VarChar(191)
+  activationHopCount           Int?
+  createdAt                    DateTime         @default(now())
+  editedAt                     DateTime?
+  deletedAt                    DateTime?
+  room                         Room             @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  authorMembership             RoomMembership   @relation(fields: [authorMembershipId], references: [id], onDelete: Restrict)
+  replyToMessage               RoomMessage?     @relation("RoomMessageReplies", fields: [replyToMessageId], references: [id], onDelete: SetNull)
+  replies                      RoomMessage[]    @relation("RoomMessageReplies")
+  attachments                  RoomAttachment[]
+  legacyDirectMessage          AgentDirectMessage? @relation("LegacyDirectMessageRoom")
+
+  @@unique([roomId, sequence])
+  @@unique([roomId, authorMembershipId, clientMessageId])
+  @@unique([sessionSourceId, sessionMessageId])
+  @@index([roomId, createdAt])
+  @@index([replyToMessageId])
+  @@index([roomId, activationRootCauseMessageId])
+}
+
+/** Inert until a separately authorized personal-body cutover. */
+model SessionRoomMigration {
+  sessionId             String   @id
+  roomId                String   @unique
+  state                 String   @default("shadow") @db.VarChar(16)
+  daemonInstallationId  String   @db.VarChar(191)
+  copiedRevision        Int      @default(0)
+  copiedSequence        BigInt   @default(0)
+  rollingHash           String   @default("0000000000000000000000000000000000000000000000000000000000000000") @db.VarChar(64)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  session               NianSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  room                  Room        @relation(fields: [roomId], references: [id], onDelete: Cascade)
+}
+
+/** Metadata-only replay receipts, never a second transcript. */
+model SessionRoomMutationReceipt {
+  sessionId   String
+  revision    Int
+  mutationId  String @db.VarChar(64)
+  contentHash String @db.VarChar(64)
+  session     NianSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, revision])
+}
+
+// @arch docs/features/network-rooms/core-data-and-security-decisions.md
+model RoomReadState {
+  roomId                String
+  membershipId          String         @unique
+  lastReadSequence      BigInt         @default(0)
+  lastDeliveredSequence BigInt         @default(0)
+  updatedAt             DateTime       @updatedAt
+  room                  Room           @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  membership            RoomMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@id([roomId, membershipId])
+  @@index([roomId, lastReadSequence])
+}
+
+// @arch docs/features/network-rooms/message-and-attachment-storage.md
+model RoomAttachment {
+  id                   String                      @id @default(cuid())
+  uploadIntentId       String?                     @unique @db.VarChar(191)
+  roomId               String
+  messageId            String?
+  uploaderMembershipId String
+  mediaKind            String                      @db.VarChar(32)
+  status               String                      @default("pending") @db.VarChar(32)
+  objectKey            String                      @unique @db.VarChar(512)
+  originalName         String                      @db.VarChar(255)
+  safeName             String                      @db.VarChar(255)
+  mimeType             String                      @db.VarChar(191)
+  byteSize             BigInt
+  sha256               String                      @db.VarChar(64)
+  width                Int?
+  height               Int?
+  durationMs           Int?
+  previewObjectKey     String?                     @unique @db.VarChar(512)
+  retentionClass       String                      @default("room_default") @db.VarChar(64)
+  expiresAt            DateTime?
+  createdAt            DateTime                    @default(now())
+  uploadedAt           DateTime?
+  readyAt              DateTime?
+  deletedAt            DateTime?
+  updatedAt            DateTime                    @updatedAt
+  room                 Room                        @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  message              RoomMessage?                @relation(fields: [messageId], references: [id], onDelete: SetNull)
+  uploaderMembership   RoomMembership              @relation(fields: [uploaderMembershipId], references: [id], onDelete: Restrict)
+  deletionJobs         RoomAttachmentDeletionJob[]
+
+  @@index([roomId, status, createdAt])
+  @@index([messageId])
+  @@index([uploaderMembershipId, status, createdAt])
+  @@index([status, expiresAt])
+}
+
+// @arch docs/features/network-rooms/message-and-attachment-storage.md
+model RoomAttachmentDeletionJob {
+  id           String         @id @default(cuid())
+  attachmentId String
+  objectKind   String         @db.VarChar(32)
+  objectKey    String         @unique @db.VarChar(512)
+  status       String         @default("pending") @db.VarChar(32)
+  attempts     Int            @default(0)
+  lastError    String?        @db.Text
+  deletedAt    DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  attachment   RoomAttachment @relation(fields: [attachmentId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([attachmentId])
+}
+
+// @arch docs/features/network-rooms/core-data-and-security-decisions.md
+model RoomBinding {
+  id                          String           @id @default(cuid())
+  bindingIntentId             String?          @unique @db.VarChar(191)
+  roomId                      String
+  userId                      String
+  agentIdentityId             String
+  agentMembershipId           String?          @unique
+  nianSessionId               String?          @unique
+  machineId                   String
+  runtimeAdapter              String           @db.VarChar(64)
+  sourceSessionKey            String           @db.VarChar(255)
+  bindingMode                 String           @db.VarChar(32)
+  activationCapability        String           @default("notify_only") @db.VarChar(32)
+  activationMode              String           @default("auto_follow") @db.VarChar(32)
+  resumeActivationMode        String?          @db.VarChar(32)
+  lastDeliveredSequence       BigInt           @default(0)
+  lastActivatedSequence       BigInt           @default(0)
+  status                      String           @default("pending_approval") @db.VarChar(32)
+  detachedReason              String?          @db.VarChar(32)
+  recoveryIntentId            String?          @db.VarChar(191)
+  recoveryLeaseUntil          DateTime?
+  recoveryErrorCode           String?          @db.VarChar(64)
+  capabilityEpoch             Int              @default(0)
+  appliedConfigurationVersion Int              @default(1)
+  pendingConfigurationVersion Int?
+  createdAt                   DateTime         @default(now())
+  updatedAt                   DateTime         @updatedAt
+  room                        Room             @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user                        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agentIdentity               AgentIdentity    @relation(fields: [agentIdentityId], references: [id], onDelete: Cascade)
+  agentMembership             RoomMembership?  @relation(fields: [agentMembershipId], references: [id], onDelete: Cascade)
+  nianSession                 NianSession?     @relation(fields: [nianSessionId], references: [id], onDelete: SetNull)
+  machine                     Machine          @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  joinRequest                 RoomJoinRequest?
+
+  @@unique([machineId, runtimeAdapter, sourceSessionKey])
+  @@index([roomId, userId, status])
+  @@index([agentIdentityId, status])
+  @@index([machineId, status])
+}
+
+// @arch docs/features/conversation-schedules.md
+model ConversationSchedule {
+  id              String      @id @default(cuid())
+  sessionId       String
+  userId          String
+  operationKey    String      @unique @db.VarChar(64)
+  bindingId       String?
+  roomId          String?
+  agentIdentityId String?
+  // 'room' (default): bound to the creating session, which is stable for a managed
+  // Room agent. 'steward': bound to machineId instead, because the steward's Session
+  // is recreated whenever the user switches machine/tool/model/strength.
+  scope           String      @default("room") @db.VarChar(16)
+  machineId       String?
+  prompt          String      @db.Text
+  timeDescription String      @db.VarChar(500)
+  timezone        String      @db.VarChar(100)
+  rule            Json
+  state           String      @default("active") @db.VarChar(16)
+  version         Int         @default(1)
+  nextDueAt       DateTime?
+  deliveryId      String?     @db.VarChar(191)
+  deliveryAt      DateTime?
+  lastState       String?     @db.VarChar(16)
+  lastReason      String?     @db.VarChar(64)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  session         NianSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([state, nextDueAt])
+  @@index([userId, roomId, state])
+  @@index([sessionId, state])
+  @@index([scope, userId, machineId, state])
+}
+
+// @arch docs/architecture/interactive-web-agent-and-versioning.md
+model InteractiveWork {
+  id               String   @id @db.VarChar(64)
+  creatorId        String
+  status           String   @default("unpublished") @db.VarChar(24)
+  title            String   @default("") @db.VarChar(200)
+  summary          String   @db.Text
+  currentVersionId String?  @db.VarChar(64)
+  newestVersionId  String?  @db.VarChar(64)
+  versionCount     Int      @default(0)
+  headRevision     Int      @default(0)
+  writeEpoch       Int      @default(0)
+  leaseToken       String?  @db.VarChar(64)
+  leaseExpiresAt   DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  creator          User @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  versions         InteractiveVersion[]
+  jobs             InteractiveJob[]
+  events           InteractiveHeadEvent[]
+  activities       InteractiveActivity[]
+  assets           InteractiveAsset[]
+  @@index([creatorId, updatedAt])
+  @@index([status, updatedAt])
+}
+
+model InteractiveVersion {
+  id               String   @id @db.VarChar(64)
+  workId           String   @db.VarChar(64)
+  seq              Int
+  actorId          String
+  basedOnVersionId String?  @db.VarChar(64)
+  title            String   @db.VarChar(200)
+  summary          String   @db.Text
+  changeSummary    String   @db.VarChar(500)
+  objectKey        String   @db.VarChar(512)
+  digest           String   @db.VarChar(64)
+  resourceIds      Json
+  createdAt        DateTime @default(now())
+  work             InteractiveWork @relation(fields: [workId], references: [id], onDelete: Cascade)
+  @@unique([workId, seq])
+  @@index([workId, actorId, createdAt])
+}
+
+model InteractiveJob {
+  id             String   @id @db.VarChar(64)
+  order          BigInt   @unique @default(autoincrement())
+  workId         String   @db.VarChar(64)
+  actorId        String
+  kind           String   @db.VarChar(16)
+  status         String   @default("queued") @db.VarChar(24)
+  requestKey     String   @db.VarChar(200)
+  inputDigest    String   @db.VarChar(64)
+  instruction    String   @db.Text
+  snapshotHtml   String?  @db.LongText
+  observation    String?  @db.Text
+  snapshotBaseVersionId String? @db.VarChar(64)
+  resourceIds    Json
+  referenceId    String?  @db.VarChar(64)
+  writeEpoch     Int
+  baseVersionId  String?  @db.VarChar(64)
+  baseRevision   Int?
+  leaseToken     String?  @db.VarChar(64)
+  errorCode      String?  @db.VarChar(64)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  finishedAt     DateTime?
+  work           InteractiveWork @relation(fields: [workId], references: [id], onDelete: Cascade)
+  actor          User @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  @@unique([actorId, requestKey])
+  @@index([status, order])
+  @@index([workId, status, order])
+}
+
+model InteractiveHeadEvent {
+  id           String   @id @db.VarChar(64)
+  workId       String   @db.VarChar(64)
+  actorId      String
+  kind         String   @db.VarChar(16)
+  fromId       String?  @db.VarChar(64)
+  toId         String   @db.VarChar(64)
+  headRevision Int
+  requestKey   String   @db.VarChar(200)
+  createdAt    DateTime @default(now())
+  work         InteractiveWork @relation(fields: [workId], references: [id], onDelete: Cascade)
+  @@unique([workId, headRevision])
+  @@unique([actorId, requestKey])
+}
+
+model InteractiveActivity {
+  id        String   @id @db.VarChar(64)
+  workId    String   @db.VarChar(64)
+  userId    String
+  kind      String   @db.VarChar(16)
+  updatedAt DateTime @updatedAt
+  work      InteractiveWork @relation(fields: [workId], references: [id], onDelete: Cascade)
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, workId, kind])
+  @@index([userId, kind, updatedAt])
+}
+
+model InteractiveAsset {
+  id          String   @id @db.VarChar(64)
+  workId      String?  @db.VarChar(64)
+  ownerId     String
+  jobId       String?  @db.VarChar(64)
+  objectKey   String   @db.VarChar(512)
+  contentType String   @db.VarChar(100)
+  size        Int
+  readToken   String   @db.VarChar(64)
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  work        InteractiveWork? @relation(fields: [workId], references: [id], onDelete: SetNull)
+  owner       User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  @@index([ownerId, createdAt])
+  @@index([jobId])
+}
+
+// @arch docs/features/personal-modules.md
+// Module payloads are versioned independently of Agent sessions and Room history.
+model PersonalModuleRecord {
+  id         String   @id @default(cuid())
+  userId     String
+  kind       String   @db.VarChar(32)
+  key        String   @db.VarChar(191)
+  sessionKey String?  @db.VarChar(191)
+  day        String?  @db.VarChar(10)
+  state      String   @default("active") @db.VarChar(32)
+  revision   Int      @default(1)
+  dueAt      DateTime?
+  payload    Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, kind, key])
+  @@index([userId, kind, day, key])
+  @@index([kind, state, dueAt])
+  @@index([userId, kind, sessionKey])
+}
+
+// Additive durable replica of the daemon's user-visible canonical mutations.
+model PersonalSessionCloudMutation {
+  sessionId            String
+  revision             Int
+  dataEpoch            Int
+  daemonInstallationId String @db.VarChar(191)
+  payload              Json
+  session              NianSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, revision])
+}

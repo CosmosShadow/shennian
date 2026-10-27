@@ -1,0 +1,26 @@
+// @arch open-source/docs/shared-runtime.md
+export const enRemoteFolders = {
+  "remote_folder_camera_ai": "Take photo as AI attachment",
+  "remote_folder_media_ai": "Add photos as AI attachments",
+  "remote_folder_upload_current": "Upload to current folder",
+  "remote_folder_attach_ai": "Add file as AI attachment",
+  "remote_folder_uploaded_to": "Uploaded to {{path}}",
+  "remote_folder_upload": "Upload file",
+  "remote_folder_pin": "Show in Features",
+  "remote_folder_unpin": "Hide from Features",
+  "mobile_folders": "Folders",
+  "remote_folder_manage_hint": "Tap to browse files. Use More to manage this shortcut.",
+  "remote_folder_machine_hint": "Choose a directory on this computer to add to your folder list",
+  "remote_folder_offline_short": "Offline",
+  "remote_folder_remove_confirm": "Remove",
+  "remote_folder": "Remote folder",
+  "remote_folder_add": "Add folder",
+  "remote_folder_add_hint": "Choose your online machine, then a directory. The shortcut is saved on this phone; files stay on your computer.",
+  "remote_folder_remove": "Remove folder shortcut",
+  "remote_folder_remove_hint": "Only remove the shortcut from this list. Files on your computer will not be deleted. You can add it again later.",
+  "remote_folder_save_failed": "Could not save. Please try again.",
+  "remote_folder_load_failed": "Could not load folder shortcuts. Please reopen this page.",
+  "remote_folder_unavailable": "Folder unavailable. Check the machine connection and access permissions.",
+  "remote_folder_offline": "Computer offline. Your folder shortcut is saved. Try again when it is online.",
+  "remote_folder_no_machines": "Pair your own computer first"
+} as const

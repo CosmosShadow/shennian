@@ -1,0 +1,20 @@
+{
+  "name": "shennian-public-workspace",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "build": "tsc -b packages/wire packages/server-extensions packages/shared && pnpm --filter ./packages/cli build && tsc -p packages/agent-protocol/sdk/node && pnpm --filter @shennian/server build && pnpm --filter @shennian/server build:core",
+    "test": "vitest run --config vitest.config.ts",
+    "test:deploy": "node --test deploy/self-hosted/*.test.mjs deploy/enterprise-ota/*.test.mjs config/*.test.mjs docs/examples/*/*.test.mjs",
+    "build:runtime": "node deploy/self-hosted/build-runtime.mjs",
+    "build:backend": "pnpm --filter @shennian/wire build && pnpm --filter @shennian/server-extensions build && pnpm --filter ./packages/cli build && pnpm --filter @shennian/server build:core"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.1",
+    "ws": "^8.18.1",
+    "@types/node": "^20",
+    "tsx": "^4.19.4",
+    "yaml": "^2.9.0"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "name": "shennian",
+  "version": "0.5.53",
+  "description": "Shennian \u2014 AI Agent Control Plane CLI",
+  "type": "module",
+  "bin": {
+    "shennian": "dist/bin/shennian.js"
+  },
+  "main": "./dist/src/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "bundledDependencies": [
+    "@agentclientprotocol/sdk",
+    "@shennian/wire",
+    "@sinclair/typebox",
+    "chalk",
+    "commander",
+    "qrcode",
+    "qrcode-terminal",
+    "ws",
+    "zod",
+    "@earendil-works/pi-coding-agent"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  },
+  "keywords": [
+    "shennian",
+    "ai",
+    "agent",
+    "cli",
+    "mobile",
+    "console"
+  ],
+  "author": "Shennian",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc && node -e \"require('node:fs').chmodSync('dist/bin/shennian.js', 0o755)\" && node scripts/copy-agent-adapter-docs.mjs",
+    "build:publish": "pnpm --filter @shennian/wire build:publish && node -e \"const fs=require('node:fs'); fs.rmSync('dist', { recursive: true, force: true }); fs.rmSync('.tsbuildinfo.publish', { force: true })\" && tsc -p tsconfig.publish.json && node scripts/minify-publish-js.mjs && node scripts/strip-publish-types.mjs dist && node -e \"require('node:fs').chmodSync('dist/bin/shennian.js', 0o755)\" && node scripts/copy-agent-adapter-docs.mjs && node scripts/check-publish-artifact.mjs",
+    "test:security:codex": "tsx scripts/verify-managed-codex-sandbox.ts",
+    "test:security:public-codex-turn": "tsx scripts/probe-public-agent-turn.ts --run --provider=codex",
+    "test:security:public-claude-turn": "tsx scripts/probe-public-agent-turn.ts --run --provider=claude",
+    "test:security:public-opencode-boundary": "tsx scripts/probe-opencode-public-boundary.ts --run",
+    "test:security:public-opencode-macos-sandbox": "tsx scripts/probe-opencode-macos-file-sandbox.ts --run",
+    "test:security:public-cursor-boundary": "tsx scripts/probe-cursor-public-boundary.ts --run",
+    "test:security:public-workbuddy-boundary": "tsx scripts/probe-workbuddy-public-boundary.ts --run",
+    "test:security:public-pi-boundary": "tsx scripts/probe-pi-public-boundary.ts --run",
+    "test:security:codex-tools": "tsx scripts/verify-managed-codex-dynamic-tools.ts",
+    "dev": "tsc --watch",
+    "prepublishOnly": "pnpm build:publish"
+  },
+  "dependencies": {
+    "@agentclientprotocol/sdk": "1.4.0",
+    "@earendil-works/pi-coding-agent": "0.85.1",
+    "@shennian/wire": "workspace:*",
+    "@sinclair/typebox": "^0.34.49",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "qrcode": "^1.5.4",
+    "qrcode-terminal": "^0.12.0",
+    "ws": "^8.18.1",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/qrcode": "^1.5.6",
+    "@types/qrcode-terminal": "^0.12.2",
+    "@types/ws": "^8.18.1",
+    "esbuild": "^0.27.4",
+    "tsx": "^4.19.4",
+    "typescript": "^5.9.3"
+  }
+}

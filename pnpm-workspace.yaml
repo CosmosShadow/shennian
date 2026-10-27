@@ -1,0 +1,9 @@
+packages:
+  - 'packages/app'
+  - 'packages/app/modules/*'
+  - 'open-source'
+  - 'open-source/packages/*'
+nodeLinker: hoisted
+overrides:
+  react-native-worklets: 0.7.4
+  markdown-it>entities: ^2.0.0

@@ -1,0 +1,49 @@
+#!/usr/bin/expect -f
+# Probe Claude /model list via expect
+
+set timeout 20
+log_user 1
+
+spawn claude
+
+# Handle "trust folder" prompt if it appears
+expect {
+    -re "trust|Trust" {
+        send "\r"
+        exp_continue
+    }
+    -re "\\$|>|❯" {
+        # Ready for input
+    }
+    -re "Tips|tip" {
+        # Loaded, ready
+    }
+    timeout {
+        puts "TIMEOUT waiting for claude prompt"
+        exit 1
+    }
+}
+
+# Give it a moment to fully initialize
+sleep 2
+
+send "/model\r"
+
+# Wait for the model list to render
+expect {
+    -re "Esc to exit|Enter to confirm|Esc to cancel" { }
+    timeout {
+        puts "TIMEOUT waiting for model list"
+        exit 1
+    }
+}
+
+# Wait for full render
+sleep 1
+
+# ESC to dismiss, then Ctrl+D to exit
+send "\x1b"
+sleep 0.5
+send "\x04"
+
+expect eof

@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["ExpoPcmRecorderModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.pcmrecorder.ExpoPcmRecorderModule"]
+  }
+}

@@ -1,0 +1,22 @@
+# @arch open-source/docs/enterprise-ota.md
+# Optional enterprise service; not part of the business Server trust domain.
+services:
+  enterprise-ota:
+    build: .
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    ports: ["127.0.0.1:8098:8080"]
+    environment:
+      OTA_PUBLIC_ORIGIN: ${OTA_PUBLIC_ORIGIN:?Set the dedicated HTTPS OTA origin}
+      OTA_STORE: /data
+      OTA_CERTIFICATE: /config/certificate.pem
+    volumes:
+      - ${OTA_STORE:?Set the absolute OTA data directory}:/data:ro
+      - ${OTA_CERTIFICATE:?Set the public certificate path}:/config/certificate.pem:ro
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

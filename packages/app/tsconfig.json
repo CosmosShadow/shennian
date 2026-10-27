@@ -1,0 +1,25 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@shennian/wire": [
+        "../../open-source/packages/wire/src"
+      ],
+      "@shennian/shared": [
+        "../../open-source/packages/shared/src"
+      ]
+    }
+  },
+  "exclude": [
+    "src/__tests__/desktop-*.test.ts",
+    "src/__tests__/agent-room-session-client.test.ts",
+    "src/__tests__/remove-room-agent.test.ts",
+    "src/__tests__/room-invitation-client.test.ts"
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
+}

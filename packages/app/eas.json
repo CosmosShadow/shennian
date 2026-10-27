@@ -1,0 +1,31 @@
+{
+  "cli": {
+    "version": ">= 7.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "prebuildCommand": "pnpm build:webview",
+      "channel": "development"
+    },
+    "preview": {
+      "distribution": "internal",
+      "prebuildCommand": "pnpm build:webview",
+      "channel": "preview",
+      "env": { "SHENNIAN_OTA_CHANNEL": "preview" }
+    },
+    "production": {
+      "prebuildCommand": "pnpm build:webview",
+      "channel": "production"
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "TBD",
+        "appleTeamId": "TBD"
+      }
+    }
+  }
+}

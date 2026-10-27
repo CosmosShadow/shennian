@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo.core",
+    "outDir": "dist-core"
+  },
+  "files": [
+    "src/core.ts",
+    "src/core-server.ts",
+    "src/types/jpush-sdk.d.ts",
+    "src/worker.ts"
+  ],
+  "include": [],
+  "exclude": [
+    "src/official",
+    "src/__tests__"
+  ]
+}

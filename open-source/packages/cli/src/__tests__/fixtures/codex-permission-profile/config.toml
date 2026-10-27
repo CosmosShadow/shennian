@@ -1,0 +1,48 @@
+default_permissions = "shennian-workspace-write"
+
+[features]
+network_proxy = true
+
+[permissions.shennian-workspace-read]
+description = "Shennian managed Agent read-only conformance fixture"
+# Keep the local execution tool available while the explicit filesystem
+# policy below remains read-only.
+extends = ":workspace"
+
+[permissions.shennian-workspace-read.filesystem]
+":root" = "deny"
+":minimal" = "read"
+":tmpdir" = "deny"
+":slash_tmp" = "deny"
+glob_scan_max_depth = 8
+
+[permissions.shennian-workspace-read.filesystem.":workspace_roots"]
+"." = "read"
+".env" = "deny"
+".env.*" = "deny"
+"**/.env" = "deny"
+"**/.env.*" = "deny"
+
+[permissions.shennian-workspace-read.network]
+enabled = false
+
+[permissions.shennian-workspace-write]
+description = "Shennian managed Agent workspace-write conformance fixture"
+extends = ":workspace"
+
+[permissions.shennian-workspace-write.filesystem]
+":root" = "deny"
+":minimal" = "read"
+":tmpdir" = "deny"
+":slash_tmp" = "deny"
+glob_scan_max_depth = 8
+
+[permissions.shennian-workspace-write.filesystem.":workspace_roots"]
+"." = "write"
+".env" = "deny"
+".env.*" = "deny"
+"**/.env" = "deny"
+"**/.env.*" = "deny"
+
+[permissions.shennian-workspace-write.network]
+enabled = false

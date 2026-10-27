@@ -1,0 +1,9 @@
+**
+!Dockerfile
+!verify-runtime.mjs
+!runtime/
+!runtime/**
+runtime/**/.env*
+runtime/**/node_modules
+runtime/**/private
+runtime/**/internal-docs

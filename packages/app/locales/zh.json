@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "神念",
+    "CFBundleName": "神念",
+    "NSLocationWhenInUseUsageDescription": "仅在您主动开启语音记录的位置开关后，记录路线、估算里程和停留时间；包括后台和锁屏期间。位置保存在本机，可随时关闭。",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "仅在您主动开启语音记录的位置开关后，记录路线、估算里程和停留时间；包括后台和锁屏期间。位置保存在本机，可随时关闭。"
+  },
+  "android": {
+    "app_name": "神念"
+  }
+}

@@ -1,0 +1,103 @@
+// @covers src/project-coordination/store.ts
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import { ProjectCoordinationStore } from '../project-coordination/store.js'
+let root: string, work: string, store: ProjectCoordinationStore
+beforeEach(() => {
+  const parent = path.join(os.tmpdir(), 'shennian-tests/unit'); fs.mkdirSync(parent, { recursive: true })
+  root = fs.mkdtempSync(path.join(parent, 'project-coordination-')); work = path.join(root, 'project'); fs.mkdirSync(work)
+  store = new ProjectCoordinationStore(() => path.join(root, 'data')); store.configure(work, { enabled: true })
+})
+afterEach(() => fs.rmSync(root, { recursive: true, force: true }))
+const add = (id: string, access: 'read' | 'write' = 'write') => store.enqueue(work, id, `Task ${id}`, 'codex', `req-${id}`, access)
+describe('project execution coordination', () => {
+  it('allows ordinary automatic completion and requires a real answer only for an explicit question', () => {
+    add('ordinary'); store.admit(work, 'ordinary', 'req-ordinary'); store.progress(work, 'ordinary', 'final', 'verified')
+    store.taskAction(work, 'ordinary', 'complete', 0, 'coordinator')
+    expect(store.read(work).tasks[0]?.status).toBe('completed')
+    add('choice'); store.admit(work, 'choice', 'req-choice'); store.progress(work, 'choice', 'final', 'needs a product choice')
+    store.askUser(work, { id: 'question-1', taskId: 'choice', question: 'Which requirement?', options: ['A', 'B'], at: 1 })
+    expect(() => store.taskAction(work, 'choice', 'complete', 0, 'coordinator')).toThrow('user_answer_required')
+    expect(store.answerUser(work, 'question-1', 'A').fresh).toBe(true)
+    expect(store.answerUser(work, 'question-1', 'A').fresh).toBe(false)
+    expect(() => store.answerUser(work, 'question-1', 'B')).toThrow('question_answered')
+    fs.unlinkSync(path.join(store.directory(work).dir, 'state.json'))
+    expect(new ProjectCoordinationStore(() => path.join(root, 'data')).read(work).questions?.[0]?.answer).toBe('A')
+    store.taskAction(work, 'choice', 'complete', 0, 'coordinator')
+    expect(store.read(work).tasks.find(t => t.id === 'choice')?.status).toBe('completed')
+  })
+  it('atomically persists adopted live work and clears an obsolete result confirmation', () => {
+    add('history'); store.admit(work, 'history', 'req-history')
+    store.progress(work, 'history', 'final', 'old result')
+    store.taskAction(work, 'history', 'confirm')
+    store.taskAction(work, 'history', 'priority', 10)
+    store.configure(work, { enabled: false })
+    store.configure(work, { enabled: true }, [{
+      id: 'history', title: 'Actual live task', agentType: 'codex', status: 'running', priority: 0,
+      requestIds: [], admittedRequestId: 'adopted:live-run', createdAt: 1, updatedAt: 2,
+    }])
+    fs.unlinkSync(path.join(store.directory(work).dir, 'state.json'))
+    const reopened = new ProjectCoordinationStore(() => path.join(root, 'data'))
+    expect(reopened.read(work).adoptionVersion).toBe(1)
+    expect(reopened.read(work).tasks[0]).toMatchObject({ status: 'running', priority: 10, admittedRequestId: 'adopted:live-run' })
+    expect(reopened.read(work).tasks[0]?.result).toBeUndefined()
+    expect(reopened.read(work).tasks[0]?.waitingReason).toBeUndefined()
+    reopened.enqueue(work, 'next', 'Next task', 'codex', 'req-next')
+    expect(reopened.admit(work, 'next', 'req-next')).toBe(false)
+  })
+  it('serializes turns across tasks, deduplicates requests, and holds resources during user input', () => {
+    add('a'); add('a'); add('b')
+    expect(store.read(work).tasks[0]?.requestIds).toEqual(['req-a'])
+    expect(store.admit(work, 'a', 'req-a')).toBe(true)
+    store.enqueue(work, 'a', 'follow-up', 'codex', 'req-next')
+    expect(store.admit(work, 'a', 'req-next')).toBe(false)
+    store.progress(work, 'a', 'waiting_user_input')
+    expect(store.admit(work, 'b', 'req-b')).toBe(false)
+    store.progress(work, 'a', 'final', 'Done, review needed')
+    expect(store.read(work).tasks[0]?.status).toBe('review')
+    expect(store.admit(work, 'b', 'req-b')).toBe(true)
+  })
+  it('changes next priority without preempting, and pauses new work without stopping current work', () => {
+    add('a'); add('b'); add('c'); store.taskAction(work, 'c', 'priority', 10)
+    expect(store.admit(work, 'a', 'req-a')).toBe(false)
+    expect(store.admit(work, 'c', 'req-c')).toBe(true)
+    store.configure(work, { paused: true })
+    expect(store.read(work).tasks.find(t => t.id === 'c')?.status).toBe('running')
+    expect(store.admit(work, 'b', 'req-b')).toBe(false)
+    expect(() => store.configure(work, { enabled: false })).toThrow('running_tasks')
+  })
+  it('requires an explicit manual start and permits bounded attested research with one writer', () => {
+    store.configure(work, { automatic: false }); add('a')
+    expect(store.admit(work, 'a', 'req-a')).toBe(false)
+    store.taskAction(work, 'a', 'run'); expect(store.admit(work, 'a', 'req-a')).toBe(true)
+    store.progress(work, 'a', 'final')
+    store.configure(work, { automatic: true, mode: 'research_parallel' })
+    add('r1', 'read'); add('r2', 'read'); add('r3', 'read'); add('w1'); add('w2')
+    expect(store.admit(work, 'r1', 'req-r1')).toBe(true)
+    expect(store.admit(work, 'r2', 'req-r2')).toBe(true)
+    expect(store.admit(work, 'r3', 'req-r3')).toBe(false)
+    expect(store.admit(work, 'w1', 'req-w1')).toBe(true)
+    expect(store.admit(work, 'w2', 'req-w2')).toBe(false)
+  })
+  it('recovers from the event journal and does not repeat a running turn after restart', () => {
+    add('a'); add('b'); store.admit(work, 'a', 'req-a')
+    fs.unlinkSync(path.join(store.directory(work).dir, 'state.json'))
+    const reopened = new ProjectCoordinationStore(() => path.join(root, 'data'))
+    expect(reopened.read(work).tasks[0]?.status).toBe('running')
+    expect(reopened.admit(work, 'b', 'req-b')).toBe(false)
+    const lock = path.join(store.directory(work).dir, 'write.lock'); fs.writeFileSync(lock, '')
+    expect(() => reopened.configure(work, { paused: true })).toThrow()
+    fs.unlinkSync(lock)
+    fs.appendFileSync(path.join(store.directory(work).dir, 'events.jsonl'), '{')
+    expect(() => reopened.read(work)).toThrow('tail_incomplete')
+  })
+  it('rejects stale rule edits, preserves versions and treats an alias as the same project', () => {
+    store.saveInstructions(work, 'Only report results.', 0)
+    expect(() => store.saveInstructions(work, 'Overwrite', 0)).toThrow('revision_conflict')
+    const alias = path.join(root, 'alias'); fs.symlinkSync(work, alias, 'dir')
+    expect(store.directory(alias).dir).toBe(store.directory(work).dir)
+    expect(store.read(alias).instructions).toBe('Only report results.')
+  })
+})

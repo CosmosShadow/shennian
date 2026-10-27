@@ -1,0 +1,106 @@
+神念社区许可 1.0 / Shennian Community License 1.0
+
+Copyright (c) 神念项目版权所有者 / Shennian copyright holders.
+
+本许可适用于随其提供的神念源码、修改版本及构建制品，但明确采用独立
+许可证的组件除外。许可人指对相应软件享有权利并按本许可授权的版权所有者。
+本许可不改变此前单独发布版本的适用条款，不授予许可人无权授予的第三方权利。
+
+1. 社区免费授权
+允许个人自用，或同一组织最多 20 个已启用自然人账号的内部使用；允许为这些
+用途复制、编译、部署和修改软件，包括服务于该组织自己的商业活动。
+应保留神念界面品牌、LOGO、版权展示，以及源码和制品中的许可及署名。
+人数不是公司全部员工数；Agent、机器人和停用账号不计，同一自然人的多个
+设备不重复计数。同一组织多个部署合并计算，不得拆分实例规避人数上限。
+
+2. 应用与成果分享
+本许可不主张你独立创作的应用、内容或业务数据的权利。允许按软件提供的
+权限机制，把自己开发或登记的本地应用及其业务入口分享给别人使用；仅访问
+这类应用、但没有神念已启用账号的访客，不计为注册账号。这不授予对外托管、
+转售或白标分发神念平台本身的权利。你须对分享的数据、应用业务及访客告知负责。
+
+3. 需要另行授权的范围
+超过 20 个已启用自然人账号，或者移除、替换、隐藏神念界面品牌、LOGO 或
+版权展示，任一条件成立，均须事先取得相应书面授权。向第三方提供神念平台
+的商业托管、多客户服务、白标分发或转售，须另行授权。组织范围、人数、期限
+和允许的界面调整以书面约定为准；没有公开固定价格。
+联系入口：https://shennian.net/#contact，通过官网企业微信联系神念团队。
+
+4. 再分发与第三方组件
+在上述允许范围内再分发源码、修改版本或构建制品，须一并提供本许可、保留
+适用版权及署名，说明所作修改，不得声称修改版得到官方背书。接收者按本许可
+取得许可人有权授予的相应权利；超出范围仍须另行授权。
+第三方组件及明确采用其他许可证的文件继续适用其各自条款。神念界面去品牌
+授权不免除第三方许可证、NOTICE、字体或素材署名等义务。
+
+5. 不是技术锁，也不是服务合同
+不要求激活码、在线授权校验或向官方回传企业成员数据。不因授权到期自动
+锁机或删除数据；无技术锁不代表超范围使用已获许可。商业授权到期应续约，
+或停止超范围使用并回到社区免费范围。本许可本身不附带部署、迁移、培训、
+定制、技术支持、响应时限或持续更新承诺。
+
+6. 保留权利与责任
+未明确授予的权利保留。超出本许可且未获另行授权的使用不在授权范围内；
+停止超范围行为不免除既有责任。软件按现状提供，在适用法律允许的范围内
+不提供明示或默示保证；版权所有者不承担适用法律允许排除的使用损失责任。
+本条不排除法律不允许排除的责任。
+
+这是有限制的源码可用许可，不是 MIT、Apache-2.0 或 OSI 认证许可。
+中英文如有不一致，以中文为准。
+
+English terms
+
+This license covers the supplied Shennian source, modifications and built artifacts,
+except components expressly licensed separately. Licensors are the respective
+copyright holders granting rights they own. Existing separately released versions
+keep their terms; no third-party rights are granted without authority.
+
+1. Free community grant. Subject to these conditions, individuals may use the
+software personally, and one organization may use it internally with up to 20
+enabled human accounts, including for its own commercial activities. Copying,
+building, deploying and modifying for those purposes is permitted. Retain Shennian
+interface branding, logos and copyright displays, and applicable source and
+artifact license and attribution notices. Count enabled human accounts using
+Shennian, not all employees. Exclude agents, bots and disabled accounts;
+deduplicate devices and aggregate deployments of the same organization.
+Splitting instances does not increase the allowance.
+
+2. Applications and outputs. This license claims no rights to your independently
+created applications, content or business data. You may use the software's explicit
+permission mechanisms to share your own developed or registered local applications
+and their business entry points. Visitors without an enabled Shennian account do
+not count as registered accounts merely by accessing those applications. This is
+not a grant to host, resell or white-label the Shennian platform itself. You remain
+responsible for your applications, shared data and visitor notices.
+
+3. Additional authorization. Prior written authorization is required if you exceed
+20 enabled human accounts OR remove, replace or hide Shennian interface branding,
+logos or copyright displays. Commercial hosting of Shennian for third parties,
+multi-customer services, white-label distribution and resale require separate
+authorization. Organization, user scope, term and permitted interface changes are
+agreed in writing. No fixed public price is stated. Contact the Shennian team via
+WeCom at https://shennian.net/#contact.
+
+4. Redistribution. Within the permitted scope, include this license with source,
+modified versions and built artifacts, retain applicable notices, identify changes,
+and do not imply official endorsement. Recipients receive the corresponding rights
+licensors can grant under these terms; broader use requires authorization.
+Third-party components and separately licensed files retain their own licenses.
+Shennian white-label permission does not waive third-party license or attribution
+obligations, including NOTICE, fonts and assets.
+
+5. No technical lock or service commitment. No activation key, online license
+verification or member-data reporting is required. Expiry does not automatically
+lock machines or delete data; absence of a lock does not authorize broader use.
+Renew commercial authorization or return to the free scope when it expires. This
+license does not include deployment, migration, training, customization, technical
+support, response-time commitments or continuing-update promises.
+
+6. Reserved rights and liability. Rights not expressly granted are reserved.
+Unlicensed use outside these terms is not authorized; stopping it does not waive
+existing liability. Software is provided AS IS, without warranties to the extent
+permitted by applicable law. Copyright holders exclude liability only as permitted
+by law; mandatory liability is not excluded.
+
+This is a restricted source-available license, not MIT, Apache-2.0 or an OSI-approved
+license. The Chinese text prevails in case of inconsistencies.

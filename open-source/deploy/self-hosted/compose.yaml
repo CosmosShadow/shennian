@@ -1,0 +1,65 @@
+name: shennian-selfhost
+x-runtime: &runtime
+  image: shennian-selfhost:local
+  build:
+    context: ../..
+    dockerfile: deploy/self-hosted/Dockerfile.source
+  env_file: .runtime/server.env
+services:
+  db:
+    image: mariadb:11.4
+    env_file: .runtime/database.env
+    command: [--lower-case-table-names=1, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci]
+    volumes: [database:/var/lib/mysql]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  redis:
+    image: redis:7.4-alpine
+    command: [redis-server, --appendonly, 'yes']
+    volumes: [redis:/data]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  migrate:
+    <<: *runtime
+    command: [pnpm, --dir, packages/server, exec, prisma, migrate, deploy]
+    depends_on:
+      db: {condition: service_healthy}
+    restart: 'no'
+  server:
+    <<: *runtime
+    volumes: [objects:/data/objects]
+    ports: ['127.0.0.1:3000:3000']
+    restart: unless-stopped
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      redis: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+  worker:
+    <<: *runtime
+    command: [node, packages/server/dist/worker.js]
+    volumes: [objects:/data/objects]
+    restart: unless-stopped
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      redis: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+volumes:
+  database:
+  redis:
+  objects:

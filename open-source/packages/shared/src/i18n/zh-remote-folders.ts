@@ -1,0 +1,26 @@
+// @arch open-source/docs/shared-runtime.md
+export const zhRemoteFolders = {
+  "remote_folder_camera_ai": "拍照作为 AI 附件",
+  "remote_folder_media_ai": "添加照片作为 AI 附件",
+  "remote_folder_upload_current": "上传到当前目录",
+  "remote_folder_attach_ai": "添加文件作为 AI 附件",
+  "remote_folder_uploaded_to": "已上传到 {{path}}",
+  "remote_folder_upload": "上传文件",
+  "remote_folder_pin": "显示在功能页",
+  "remote_folder_unpin": "从功能页隐藏",
+  "mobile_folders": "文件夹",
+  "remote_folder_manage_hint": "轻点浏览文件，右侧更多可管理入口",
+  "remote_folder_machine_hint": "选择这台电脑的目录，添加到文件夹列表",
+  "remote_folder_offline_short": "离线",
+  "remote_folder_remove_confirm": "移除",
+  "remote_folder": "远程文件夹",
+  "remote_folder_add": "添加文件夹",
+  "remote_folder_add_hint": "选择本人的在线机器，再选择目录。入口保存在当前手机，文件仍在电脑上。",
+  "remote_folder_remove": "移除文件夹入口",
+  "remote_folder_remove_hint": "只从列表移除入口，不会删除电脑上的文件。之后可以重新添加。",
+  "remote_folder_save_failed": "保存失败，请重试",
+  "remote_folder_load_failed": "文件夹入口加载失败，请重新打开此页面",
+  "remote_folder_unavailable": "文件夹不可用，请检查机器连接及访问权限",
+  "remote_folder_offline": "电脑离线，文件夹入口已保留。电脑上线后重试。",
+  "remote_folder_no_machines": "请先配对自己的电脑"
+} as const

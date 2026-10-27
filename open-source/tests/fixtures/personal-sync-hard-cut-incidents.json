@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-09-03T00:00:00.000Z",
+  "containsMessageContent": false,
+  "incidents": [
+    {
+      "id": "legacy-index-after-server-purge",
+      "surface": "server",
+      "input": { "protocolVersion": 1, "dataEpoch": 1, "indexRevision": 18 },
+      "expected": { "code": "upgrade_required", "retryable": false, "requiredAction": "upgrade_client" }
+    },
+    {
+      "id": "personal-index-conflicts-with-room-authority",
+      "surface": "daemon",
+      "input": { "protocolVersion": 2, "dataEpoch": 2, "indexRevision": 19 },
+      "expected": { "code": "room_authority_conflict", "retryable": false, "requiredAction": "quarantine_record" }
+    },
+    {
+      "id": "history-response-with-zero-app-cache",
+      "surface": "app",
+      "input": { "responseBytes": 77824, "messageCount": 120, "bodyRevision": 291, "cacheMessageCount": 0 },
+      "expected": { "localErrorCode": "history_snapshot_commit_failed", "readWatermarkCommitted": false }
+    },
+    {
+      "id": "codex-active-archive-attention-duplicate",
+      "surface": "daemon",
+      "input": { "providerEventIdHash": "sha256:fixture-terminal-event", "eventCount": 15, "pathMoveCount": 1, "observedCopies": 30 },
+      "expected": { "canonicalCopies": 15, "attentionDelta": 0, "canonicalCopiesAfterDelete": 0 }
+    }
+  ]
+}

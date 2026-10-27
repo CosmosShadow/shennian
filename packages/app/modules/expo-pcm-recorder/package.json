@@ -1,0 +1,12 @@
+{
+  "name": "expo-pcm-recorder",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Stream 16 kHz microphone PCM and play 24 kHz PCM for realtime voice calls.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo 'Native Expo module; no JS build step'"
+  },
+  "dependencies": {}
+}

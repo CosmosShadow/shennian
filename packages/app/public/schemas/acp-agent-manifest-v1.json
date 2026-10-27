@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shennian.net/schemas/acp-agent-manifest-v1.json",
+  "title": "Shennian ACP Agent Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "name", "protocol", "command"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "protocol": { "const": "acp" },
+    "command": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "args": {
+      "type": "array",
+      "maxItems": 64,
+      "items": { "type": "string", "maxLength": 4096 },
+      "default": []
+    },
+    "enabled": { "type": "boolean", "default": true },
+    "homepage": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "clientCapabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "readTextFile": { "type": "boolean", "default": false },
+        "writeTextFile": { "type": "boolean", "default": false },
+        "terminal": { "type": "boolean", "default": false }
+      }
+    }
+  }
+}

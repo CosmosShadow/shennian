@@ -1,0 +1,62 @@
+{
+  "name": "@shennian/server",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/core-server.ts",
+    "dev:worker": "tsx watch src/worker.ts",
+    "prebuild": "pnpm db:generate",
+    "build": "tsc && node scripts/copy-runtime-assets.mjs",
+    "build:core": "pnpm db:generate && node scripts/build-core.mjs",
+    "check:core-boundary": "node scripts/check-core-boundary.mjs",
+    "start": "node dist/core-server.js",
+    "start:core": "node dist-core/core-server.js",
+    "db:migrate": "prisma migrate deploy",
+    "db:generate": "node scripts/generate-prisma.mjs"
+  },
+  "dependencies": {
+    "@alicloud/dysmsapi20170525": "^4.5.0",
+    "@alicloud/openapi-client": "^0.4.15",
+    "@alicloud/tea-util": "^1.4.11",
+    "@fastify/cors": "^11.2.0",
+    "@fastify/websocket": "^11.2.0",
+    "@paralleldrive/cuid2": "^3.3.0",
+    "@prisma/adapter-mariadb": "^7.5.0",
+    "@prisma/client": "^7.5.0",
+    "@shennian/wire": "workspace:*",
+    "ajv": "8.18.0",
+    "ali-oss": "^6.23.0",
+    "dotenv": "^17.3.1",
+    "fastify": "^5.8.4",
+    "geoip-lite": "^2.0.1",
+    "google-auth-library": "^10.6.2",
+    "ioredis": "^5.10.1",
+    "jose": "^6.2.2",
+    "jpush-sdk": "^3.5.0",
+    "jsonwebtoken": "^9.0.3",
+    "node-cron": "^4.2.1",
+    "sharp": "^0.33.5",
+    "tsx": "^4.21.0",
+    "web-push": "^3.6.7",
+    "ws": "^8.18.0",
+    "@shennian/server-extensions": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/ali-oss": "^6.23.3",
+    "@types/geoip-lite": "^1.4.4",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20",
+    "@types/web-push": "^3.6.4",
+    "@types/ws": "^8.18.1",
+    "prisma": "^7.5.0",
+    "typescript": "^5.9.3"
+  },
+  "exports": {
+    "./core": "./dist/core.js",
+    "./runtime": "./dist/server-runtime.js",
+    "./env": "./dist/env.js",
+    "./integration": "./dist/integration.js",
+    "./worker": "./dist/worker-entry.js"
+  }
+}

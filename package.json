@@ -1,0 +1,23 @@
+{
+  "name": "shennian-source",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "engines": { "node": ">=22.19.0" },
+  "scripts": {
+    "build": "pnpm --dir open-source build && pnpm --dir packages/app typecheck",
+    "build:app": "pnpm --dir packages/app build:webview && pnpm --dir packages/app typecheck",
+    "ios": "pnpm --dir packages/app ios",
+    "android": "pnpm --dir packages/app android",
+    "test": "pnpm --dir open-source test && pnpm test:app",
+    "test:app": "vitest run --config open-source/config/mobile-vitest.config.ts",
+    "test:deploy": "pnpm --dir open-source test:deploy"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.1",
+    "tsx": "^4.19.4",
+    "@types/node": "^20",
+    "yaml": "^2.9.0",
+    "happy-dom": "21.0.4"
+  }
+}

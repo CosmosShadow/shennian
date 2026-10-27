@@ -1,0 +1,42 @@
+// @covers src/session/queue-retry.ts
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { QueueRetryScheduler } from '../session/queue-retry.js'
+afterEach(() => vi.useRealTimers())
+describe('pending Session retry scheduling', () => {
+  it('coalesces wakeups, backs off failures and cancels shutdown work', () => {
+    vi.useFakeTimers()
+    const drain = vi.fn()
+    const scheduler = new QueueRetryScheduler(drain)
+    scheduler.schedule('one', true)
+    scheduler.schedule('one', true)
+    vi.advanceTimersByTime(999)
+    expect(drain).not.toHaveBeenCalled()
+    vi.advanceTimersByTime(1)
+    expect(drain).toHaveBeenCalledTimes(1)
+    scheduler.schedule('one', true)
+    vi.advanceTimersByTime(1999)
+    expect(drain).toHaveBeenCalledTimes(1)
+    vi.advanceTimersByTime(1)
+    expect(drain).toHaveBeenCalledTimes(2)
+    scheduler.schedule('one')
+    scheduler.cancel('one')
+    scheduler.schedule('two')
+    scheduler.stop()
+    scheduler.schedule('three')
+    vi.advanceTimersByTime(60_000)
+    expect(drain).toHaveBeenCalledTimes(2)
+  })
+  it('keeps a configuration block on its persisted low-frequency deadline', () => {
+    vi.useFakeTimers()
+    const drain = vi.fn()
+    const scheduler = new QueueRetryScheduler(drain)
+    scheduler.schedule('blocked', false, Date.now() + 60_000)
+    scheduler.schedule('blocked')
+    vi.advanceTimersByTime(59_999)
+    expect(drain).not.toHaveBeenCalled()
+    vi.advanceTimersByTime(1)
+    expect(drain).toHaveBeenCalledOnce()
+    scheduler.stop()
+  })
+
+})
