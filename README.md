@@ -4,8 +4,6 @@
 
 [English](README.en.md) · [官网](https://shennian.net/) · [客户端 / Skill 安装](https://shennian.net/install.md) · [全部使用文档](https://shennian.net/docs) · [全部功能](open-source/docs/features.md)
 
-> 私有准备仓库，暂未开放。后续是否公开由维护者另行决定。
-
 神念帮助个人把自己的 AI、知识、应用和任务组织成 Personal Agent，也帮助企业连接同事和他们的 AI，构建 AI 原生组织。通过手机 App 或已有的原生 AI 工具安排工作、参与群聊，并按权限分享智能体与应用。可以使用神念官方云，也可以部署独立的自托管 服务端。
 
 ## 系统架构
@@ -69,7 +67,7 @@
 
 | 路径 | 主要步骤 | 详细文档 |
 |---|---|---|
-| **从源码构建** | 仓库私有期间先取得访问权限；准备 Node.js / pnpm，克隆、冻结安装并构建 App / 客户端；原生发行使用自己的签名配置。 | [源码构建](open-source/docs/getting-started.md#2-从源码构建) · [手机构建与签名](open-source/docs/mobile-app.md) |
+| **从源码构建** | 准备 Node.js / pnpm，克隆、冻结安装并构建 App / 客户端；原生发行使用自己的签名配置。 | [源码构建](open-source/docs/getting-started.md#2-从源码构建) · [手机构建与签名](open-source/docs/mobile-app.md) |
 | **自托管 服务端** | 准备服务器与受信 HTTPS，初始化独立配置，启动 Docker Compose，再让 App / 客户端 连接同一实例。 | [自托管入门](open-source/docs/getting-started.md#3-自托管自己的-server) · [Docker 部署](open-source/deploy/self-hosted/README.md) |
 | **运维已有实例** | 备份数据库、附件、配置与各台 客户端；升级时遵循正式迁移与回退流程。 | [备份与升级](open-source/deploy/self-hosted/backup-and-upgrade.md) · [企业自有 OTA](open-source/docs/enterprise-ota.md) |
 

@@ -4,8 +4,6 @@
 
 [简体中文](README.md) · [Website](https://shennian.net/en/) · [Install Client & Skill](https://shennian.net/install.md) · [All user guides](https://shennian.net/en/docs) · [All features](open-source/docs/features.md)
 
-> Private preparation repository. The repository is not publicly accessible yet; publication requires a separate maintainer decision.
-
 Shennian helps individuals organize their AI, knowledge, apps, and tasks into a Personal Agent, and helps companies connect colleagues and their AI into an AI-native organization. Use the mobile App or an existing AI tool to direct work, collaborate in rooms, and share selected agents or applications. Choose Shennian Cloud or an independent self-hosted Server.
 
 ## System architecture
@@ -69,7 +67,7 @@ Using someone else's shared AI or joining a room does not require connecting you
 
 | Path | Main steps | Guide |
 |---|---|---|
-| **Build from source** | Request repository access while private; prepare Node.js and pnpm, clone, install frozen dependencies, and build App and Client. Native distribution uses your signing configuration. | [Source build](open-source/docs/getting-started.en.md#2-build-from-source) · [Mobile builds](open-source/docs/mobile-app.md) |
+| **Build from source** | Prepare Node.js and pnpm, clone, install frozen dependencies, and build App and Client. Native distribution uses your signing configuration. | [Source build](open-source/docs/getting-started.en.md#2-build-from-source) · [Mobile builds](open-source/docs/mobile-app.md) |
 | **Self-host a Server** | Prepare infrastructure and trusted HTTPS, initialize independent instance configuration, start Docker Compose, and connect App and Client to that same instance. | [Self-hosting walkthrough](open-source/docs/getting-started.en.md#3-self-host-your-server) · [Docker deployment](open-source/deploy/self-hosted/README.md) |
 | **Operate your instance** | Back up database, attachments, configuration, and each Client; follow migration and rollback procedures when upgrading. | [Backup and upgrade](open-source/deploy/self-hosted/backup-and-upgrade.md) · [Enterprise OTA](open-source/docs/enterprise-ota.md) |
 
