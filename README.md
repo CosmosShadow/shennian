@@ -96,6 +96,6 @@
 
 ## 许可与联系
 
-[Shennian Community License 1.0](LICENSE) 允许个人自用、同一组织最多 **20 个已启用自然人账号**在许可条件内内部使用，并保留品牌和版权声明。这是有使用条件的源码可用许可，不是 MIT / Apache 或无限制商用许可。第三方组件保留各自许可；自建应用、内容与业务数据保留各自权利。
+本项目采用 [Shennian Community License 1.0](LICENSE)。第三方组件遵循各自许可证。
 
-[许可说明](open-source/LICENSE-STATUS.md) · [第三方声明](open-source/docs/third-party/README.md) · [联系团队](https://shennian.net/#contact)
+[第三方声明](open-source/docs/third-party/README.md) · [联系团队](https://shennian.net/#contact)

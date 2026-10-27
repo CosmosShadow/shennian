@@ -96,6 +96,6 @@ One installation uses one active Server. Do not overwrite an existing instance b
 
 ## License and contact
 
-[Shennian Community License 1.0](LICENSE) permits personal use and internal use by one organization with up to **20 enabled human accounts**, subject to its terms and retention of branding and copyright notices. It is a restricted source-available license, not MIT/Apache or unrestricted commercial permission. Third-party components retain their licenses. Independently created apps, content, and business data retain their own rights.
+This project uses the [Shennian Community License 1.0](LICENSE). Third-party components retain their respective licenses.
 
-[License details](open-source/LICENSE-STATUS.md) · [Third-party notices](open-source/docs/third-party/README.md) · [Contact the team](https://shennian.net/#contact)
+[Third-party notices](open-source/docs/third-party/README.md) · [Contact the team](https://shennian.net/#contact)
