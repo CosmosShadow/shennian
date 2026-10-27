@@ -4,7 +4,7 @@
 
 [简体中文](README.md) · [Website](https://shennian.net/en/) · [Install Client & Skill](https://shennian.net/install.md) · [All user guides](https://shennian.net/en/docs) · [All features](open-source/docs/features.md)
 
-Shennian helps individuals organize their AI, knowledge, apps, and tasks into a Personal Agent, and helps companies connect colleagues and their AI into an AI-native organization. Use the mobile App or an existing AI tool to direct work, collaborate in rooms, and share selected agents or applications. Choose Shennian Cloud or an independent self-hosted Server.
+This is the official Shennian source repository. Shennian helps individuals organize their AI, knowledge, apps, and tasks into a Personal Agent, and helps companies connect colleagues and their AI into an AI-native organization. Use the mobile App or an existing AI tool to direct work, collaborate in rooms, and share selected agents or applications. Choose Shennian Cloud or an independent self-hosted Server.
 
 ## System architecture
 
@@ -22,27 +22,27 @@ Native AI tools use Skill and CLI to reach Client. The App and Client connect to
 
 ## Features
 
-| Capability | What you can use it for | Availability |
-|---|---|---|
-| **Connect existing AI** | Client, CLI, and Skill connect local AI, tools, and sessions. | Available |
-| **People and AI in rooms** | Members, invitations, messages, attachments, permissions, and in-app unread state. | Available |
-| **Agents and sharing** | Agent identities, conversations, sharing links, discovery, and contacts. | Available |
-| **Machine sharing and revocation** | Give trusted people machine-level access to AI; owners manage invitations and revocation. | Available |
-| **Mobile remote control** | Manage computers, projects, AI, and task conversations from a phone. | Available depending on platform and version |
-| **Personal Agent and main-agent settings** | Choose a primary computer, configure models and default worker AI, and let the built-in assistant use authorized capabilities. | In staged development |
-| **Wiki, memory, and diary** | Markdown on the primary computer, bounded index access, diary replicas, and edit-conflict controls. | Development candidate |
-| **Background workers and tasks** | Authorized background execution, task state, events, and results; high-impact actions still need confirmation. | Depends on execution path and version |
-| **Reminders, calendar, notes, and listening** | Personal records, reminders, recording, and transcription are delivered by module and version. | In staged development |
-| **Project coordination** | Project queues, coordinator conversations, worker orchestration, and the Client local page. | Preview; not guaranteed in stable |
-| **Local folders and apps** | Browse authorized folders and access registered apps and local services, not arbitrary paths or ports. | Development candidate |
-| **Share local and self-developed apps** | Share apps you develop or register, with explicit resource and API permissions, expiry, and revocation. | Server available; publishing depends on Client version |
-| **Self-hosted deployment and accounts** | Independent Server, Worker, database, Redis, local attachments, and local accounts; choose cloud or self-hosted per installation. | Core flow verified |
-| **Backup, restore, and upgrades** | Cover the database, attachments, configuration, Redis, and the isolated Client used in this test. | Single-instance drill passed |
-| **Models, speech, and notifications** | Operators configure models, ASR/TTS, SMS, and push as needed; secrets are not sent to ordinary clients. | Optional configuration |
-| **Enterprise-owned OTA** | Enterprise builds can disable OTA or pin their own HTTPS update source and signing certificate; business-server selection does not change code trust. | Configuration, signing tools, and enterprise distribution service are development candidates |
-| **Enterprise SSO** | Use local accounts and registration policies for now. | Deferred, outside the current delivery |
+| Capability | What you can use it for | Source implementation |
+|---|---|:---:|
+| **Connect existing AI** | Client, CLI, and Skill connect local AI, tools, and sessions. | ✓ |
+| **People and AI in rooms** | Members, invitations, messages, attachments, permissions, and in-app unread state. | ✓ |
+| **Agents and sharing** | Agent identities, conversations, sharing links, discovery, and contacts. | ✓ |
+| **Machine sharing and revocation** | Give trusted people machine-level access to AI; owners manage invitations and revocation. | ✓ |
+| **Mobile remote control** | Manage computers, projects, AI, and task conversations from a phone. | ✓ |
+| **Personal Agent and main-agent settings** | Choose a primary computer, configure models and default worker AI, and let the built-in assistant use authorized capabilities. | ✓ |
+| **Wiki, memory, and diary** | Markdown on the primary computer, bounded index access, diary replicas, and edit-conflict controls. | ✓ |
+| **Background workers and tasks** | Authorized background execution, task state, events, and results; high-impact actions still need confirmation. | ✓ |
+| **Reminders, calendar, notes, and listening** | Personal records, reminders, recording, and transcription are delivered by module and version. | ✓ |
+| **Project coordination** | Project queues, coordinator conversations, worker orchestration, and the Client local page. | ✓ |
+| **Local folders and apps** | Browse authorized folders and access registered apps and local services, not arbitrary paths or ports. | ✓ |
+| **Share local and self-developed apps** | Share apps you develop or register, with explicit resource and API permissions, expiry, and revocation. | ✓ |
+| **Self-hosted deployment and accounts** | Independent Server, Worker, database, Redis, local attachments, and local accounts; choose cloud or self-hosted per installation. | ✓ |
+| **Backup, restore, and upgrades** | Cover the database, attachments, configuration, Redis, and the isolated Client used in this test. | ✓ |
+| **Models, speech, and notifications** | Operators configure models, ASR/TTS, SMS, and push as needed; secrets are not sent to ordinary clients. | ✓ |
+| **Enterprise-owned OTA** | Enterprise builds can disable OTA or pin their own HTTPS update source and signing certificate; business-server selection does not change code trust. | ✓ |
+| **Enterprise SSO** | Use local accounts and registration policies for now. | — |
 
-Availability depends on the platform, installed version, and deployment configuration. A feature appearing in the architecture does not mean every self-hosted combination has been verified. See the [complete feature guide](open-source/docs/features.md) and [self-hosted acceptance matrix](open-source/docs/self-hosted-acceptance.md).
+✓ means implemented in source; — means not implemented. Enterprise SSO is not supported yet. Enable features according to platform, installed version, and instance configuration. See the [complete feature guide](open-source/docs/features.md) and [self-hosted acceptance matrix](open-source/docs/self-hosted-acceptance.md).
 
 ## People and AI working together
 
