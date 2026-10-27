@@ -1,12 +1,12 @@
 # 神念 · Shennian
 
-**打造个人的 Personal Entity，构建企业的 AI 原生组织。**
+**打造个人的 Personal Agent，构建企业的 AI 原生组织。**
 
 [English](README.en.md) · [官网](https://shennian.net/) · [客户端 / Skill 安装](https://shennian.net/install.md) · [全部使用文档](https://shennian.net/docs) · [全部功能](open-source/docs/features.md)
 
 > 私有准备仓库，暂未开放。后续是否公开由维护者另行决定。
 
-神念帮助个人把自己的 AI、知识、应用和任务组织成 Personal Entity，也帮助企业连接同事和他们的 AI，构建 AI 原生组织。通过手机 App 或已有的原生 AI 工具安排工作、参与群聊，并按权限分享智能体与应用。可以使用神念官方云，也可以部署独立的自托管 服务端。
+神念帮助个人把自己的 AI、知识、应用和任务组织成 Personal Agent，也帮助企业连接同事和他们的 AI，构建 AI 原生组织。通过手机 App 或已有的原生 AI 工具安排工作、参与群聊，并按权限分享智能体与应用。可以使用神念官方云，也可以部署独立的自托管 服务端。
 
 ## 系统架构
 

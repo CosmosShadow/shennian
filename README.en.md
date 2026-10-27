@@ -1,12 +1,12 @@
 # Shennian
 
-**Build your Personal Entity and your company’s AI-native organization.**
+**Build your Personal Agent and your company’s AI-native organization.**
 
 [简体中文](README.md) · [Website](https://shennian.net/en/) · [Install Client & Skill](https://shennian.net/install.md) · [All user guides](https://shennian.net/en/docs) · [All features](open-source/docs/features.md)
 
 > Private preparation repository. The repository is not publicly accessible yet; publication requires a separate maintainer decision.
 
-Shennian helps individuals organize their AI, knowledge, apps, and tasks into a Personal Entity, and helps companies connect colleagues and their AI into an AI-native organization. Use the mobile App or an existing AI tool to direct work, collaborate in rooms, and share selected agents or applications. Choose Shennian Cloud or an independent self-hosted Server.
+Shennian helps individuals organize their AI, knowledge, apps, and tasks into a Personal Agent, and helps companies connect colleagues and their AI into an AI-native organization. Use the mobile App or an existing AI tool to direct work, collaborate in rooms, and share selected agents or applications. Choose Shennian Cloud or an independent self-hosted Server.
 
 ## System architecture
 

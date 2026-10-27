@@ -12,4 +12,4 @@ Old screenshots containing real accounts, machine paths or conversations have be
 
 - `organization-network-colleagues-zh.png` / `organization-network-colleagues-en.png`: current organization network, using colleague terminology. Earlier network images are retained as historical assets, not linked from the current README or website.
 
-- `organization-network-colleagues-zh.png` / `organization-network-colleagues-en.png`: current colleague-terminology revision; used by the website and README alongside the Personal Entity positioning. Prior network images remain historical assets.
+- `organization-network-colleagues-zh.png` / `organization-network-colleagues-en.png`: current colleague-terminology revision; used by the website and README alongside the Personal Agent positioning. Prior network images remain historical assets.
