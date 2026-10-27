@@ -32,7 +32,7 @@
 
 ## 架构与数据边界
 
-![开源功能与系统架构](assets/system-architecture-v2.png)
+![开源功能与系统架构](assets/system-architecture-v2-zh.png)
 
 图中只包含开源框架，不代表所有模块已验收。每台 Client 的工作空间、记忆、日记和密钥需独立备份，Server 备份不能代替。HTTPS / WSS 不是端到端加密。Desktop 暂停维护与分发；SSO 暂缓。
 

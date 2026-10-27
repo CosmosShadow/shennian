@@ -46,6 +46,12 @@ Native AI tools use Skill and CLI to reach Client. The App and Client connect to
 
 Availability depends on the platform, installed version, and deployment configuration. A feature appearing in the architecture does not mean every self-hosted combination has been verified. See the [complete feature guide](open-source/docs/features.md) and [self-hosted acceptance matrix](open-source/docs/self-hosted-acceptance.md).
 
+## People and AI working together
+
+![Shennian AI-native organization network](open-source/docs/assets/organization-network-en.png)
+
+Employees connect their AI from their own computers. The selected organization Server manages accounts, rooms, and permissions. People and role-based agents discuss work, assign tasks, and review results; customers can use explicitly shared support agents, forms, and business tools. This is a conceptual collaboration map; feature status and acceptance scope are listed above.
+
 ## Get started with Shennian Cloud
 
 No self-hosted Server is required.
