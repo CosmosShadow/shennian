@@ -2,7 +2,7 @@
 
 > 核对日期：2026-10-27。这是开源框架的功能地图与运行结构，不是“全部功能已完成自托管验收”的承诺。当前验收范围见[自托管验收矩阵](self-hosted-acceptance.md)。手机是主要入口；Client / CLI 是电脑上的执行器，不是桌面界面产品。
 
-![开源功能与系统架构](assets/system-architecture.png)
+![开源功能与系统架构](assets/system-architecture-v2.png)
 
 这张生成式功能架构图用于展示模块全景；下方 Mermaid 与文字定义精确的运行与权限关系。应用分享与客服实践见[应用案例](application-examples.md)。
 
