@@ -96,6 +96,6 @@
 
 ## 许可与联系
 
-本项目采用 [Shennian Community License 1.0](LICENSE)。第三方组件遵循各自许可证。
+个人和企业均可免费使用神念，请保留神念 Logo 和版权信息。企业如需移除或替换，请[联系我们取得授权](https://shennian.net/#contact)。完整条款见[许可证](LICENSE)，第三方组件遵循各自许可证。
 
 [第三方声明](open-source/docs/third-party/README.md) · [联系团队](https://shennian.net/#contact)

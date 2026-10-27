@@ -96,6 +96,6 @@ One installation uses one active Server. Do not overwrite an existing instance b
 
 ## License and contact
 
-This project uses the [Shennian Community License 1.0](LICENSE). Third-party components retain their respective licenses.
+Individuals and businesses may use Shennian free of charge. Retain the Shennian logo and copyright information. Businesses wishing to remove or replace them should [contact us for authorization](https://shennian.net/#contact). See the [license](LICENSE) for full terms; third-party components retain their respective licenses.
 
 [Third-party notices](open-source/docs/third-party/README.md) · [Contact the team](https://shennian.net/#contact)

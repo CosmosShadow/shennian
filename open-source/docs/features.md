@@ -38,6 +38,6 @@
 
 图中只包含开源框架，不代表所有模块已验收。每台 Client 的工作空间、记忆、日记和密钥需独立备份，Server 备份不能代替。HTTPS / WSS 不是端到端加密。Desktop 暂停维护与分发；SSO 暂缓。
 
-社区免费上限、商业授权与联系渠道见[社区与商业授权](commercial-licensing.md)。
+保留神念 Logo 和版权信息即可使用；企业如需移除或替换，请[联系我们取得授权](commercial-licensing.md)。
 
 详细见[系统架构](system-architecture.md)、[验收矩阵](self-hosted-acceptance.md)、[企业自有 OTA 配置](enterprise-ota.md)及[部署与备份升级](../deploy/self-hosted/README.md)。
